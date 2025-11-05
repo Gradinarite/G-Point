@@ -1,0 +1,30 @@
+using System.ComponentModel.DataAnnotations;
+using GPoint.Domain.Enums;
+
+namespace GPoint.DataAccess.Data.Entities;
+
+public class User
+{
+  [Key]
+  public Guid Id { get; set; }
+  [Required]
+  [MaxLength(100)]
+  public string FullName { get; set; } = null!;
+  [Required]
+  [MaxLength(100)]
+  public string Email { get; set; } = null!;
+  [Required]
+  [MaxLength(64)]
+  public string PasswordHash { get; set; } = null!;
+  [Required]
+  public UserRole Role { get; set; }
+
+  // A specialist (User) can provide many services
+  public ICollection<Service>? Services { get; set; } = new List<Service>();
+
+  // A user can have many appointments (as a client)
+  public ICollection<Appointment>? Appointments { get; set; } = new List<Appointment>();
+
+  // Appointments where the user is the specialist
+  public ICollection<Appointment>? SpecialistAppointments { get; set; } = new List<Appointment>();
+}
