@@ -20,8 +20,10 @@ public class Service
     public Guid SpecialistId { get; set; }
 
     [ForeignKey("SpecialistId")]
+    [InverseProperty("Services")]
     public User Specialist { get; set; } = null!;
 
     // One Service has many Slots
+    [InverseProperty("Service")]
     public ICollection<Slot>? Slots { get; set; } = new List<Slot>();
 }

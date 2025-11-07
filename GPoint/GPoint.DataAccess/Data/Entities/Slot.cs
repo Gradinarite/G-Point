@@ -20,6 +20,7 @@ public class Slot
     public Guid? AppointmentId { get; set; }
 
     [ForeignKey("AppointmentId")]
+    [InverseProperty("Slot")]
     public Appointment? Appointment { get; set; }
     
     [Required]
@@ -27,8 +28,10 @@ public class Slot
     
     [Required]
     [ForeignKey("ServiceId")]
+    [InverseProperty("Slots")]
     public Service Service { get; set; } = null!;
 
     [ForeignKey("SpecialistId")]
+    [InverseProperty("Slots")]
     public User Specialist { get; set; } = null!;
 }
