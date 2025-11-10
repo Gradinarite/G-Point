@@ -1,16 +1,16 @@
 using GPoint.DataAccess.Data.Entities;
+using GPoint.Domain.DTOs;
 
 namespace GPoint.App.Interfaces;
 
 public interface IUserService
 {
-    Task<User?> GetByIdAsync(Guid id);
-    Task<User?> GetByEmailAsync(string email);
-    Task<IEnumerable<User>> GetAllAsync();
-    Task<IEnumerable<User>> GetSpecialistsAsync();
-    Task<User> CreateAsync(User user);
-    Task<User> UpdateAsync(User user);
+    Task<UserDto?> GetByIdAsync(Guid id);
+    Task<UserDto?> GetByEmailAsync(string email);
+    Task<IEnumerable<UserDto>> GetAllAsync();
+    Task<IEnumerable<UserDto>> GetSpecialistsAsync();
+    Task<UserDto> CreateAsync(CreateUserDto userDto);
+    Task<UserDto?> UpdateAsync(UserDto userDto);
     Task<bool> DeleteAsync(Guid id);
     Task<bool> EmailExistsAsync(string email);
 }
-

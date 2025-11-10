@@ -2,6 +2,7 @@ using GPoint.App.Interfaces;
 using GPoint.DataAccess.Context;
 using GPoint.DataAccess.Data;
 using GPoint.DataAccess.Data.Entities;
+using GPoint.Domain.DTOs;
 using GPoint.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,57 +17,126 @@ public class UserService : IUserService
         _context = context;
     }
 
-    public async Task<User?> GetByIdAsync(Guid id)
+    public async Task<UserDto?> GetByIdAsync(Guid id)
     {
-        return await _context.Users
+        var user = await _context.Users
             .Include(u => u.Services)
             .Include(u => u.Appointments)
             .Include(u => u.SpecialistAppointments)
             .FirstOrDefaultAsync(u => u.Id == id);
+
+        if (user is null)
+        {
+            return null;
+        }
+
+        return new UserDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            FullName = user.FullName,
+            Role = user.Role
+        };
+    }
+    public async Task<UserDto?> GetByEmailAsync(string email)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        
+        if (user is null)
+        {
+            return null;
+        }
+
+        return new UserDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            FullName = user.FullName,
+            Role = user.Role
+        };
     }
 
-    public async Task<User?> GetByEmailAsync(string email)
+    public async Task<IEnumerable<UserDto>> GetAllAsync()
     {
-        return await _context.Users
-            .Include(u => u.Services)
-            .FirstOrDefaultAsync(u => u.Email == email);
-    }
-
-    public async Task<IEnumerable<User>> GetAllAsync()
-    {
-        return await _context.Users
-            .Include(u => u.Services)
+        return await _context.Users.Select(u => new UserDto
+            {
+                Id = u.Id,
+                FullName = u.FullName,
+                Email = u.Email,
+                Role = u.Role
+            })
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<User>> GetSpecialistsAsync()
+    public async Task<IEnumerable<UserDto>> GetSpecialistsAsync()
     {
         return await _context.Users
             .Where(u => u.Role == UserRole.Specialist)
             .Include(u => u.Services)
+            .Select(u => new UserDto
+            {
+                Id = u.Id,
+                Email = u.Email,
+                FullName = u.FullName,
+                Role = u.Role
+            })
             .ToListAsync();
     }
 
-    public async Task<User> CreateAsync(User user)
+    public async Task<UserDto> CreateAsync(CreateUserDto userDto)
     {
-        user.Id = Guid.NewGuid();
+        var user = new User
+        {
+            Id = Guid.NewGuid(),
+            FullName = userDto.FullName,
+            Email = userDto.Email,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.PasswordHash),
+            Role = userDto.Role
+        };
+
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
-        return user;
+
+        return new UserDto
+        {
+            Id = user.Id,
+            FullName = user.FullName,
+            Email = user.Email,
+            Role = user.Role
+        };
     }
 
-    public async Task<User> UpdateAsync(User user)
+    public async Task<UserDto?> UpdateAsync(UserDto userDto)
     {
-        _context.Users.Update(user);
+        var user = await _context.Users.FindAsync(userDto.Id);
+        if (user is null)
+        {
+            return null;
+        }
+
+        user.FullName = userDto.FullName;
+        user.Email = userDto.Email;
+        user.Role = userDto.Role;
+
         await _context.SaveChangesAsync();
-        return user;
+
+        return new UserDto
+        {
+            Id = user.Id,
+            FullName = user.FullName,
+            Email = user.Email,
+            Role = user.Role
+        };
     }
+
 
     public async Task<bool> DeleteAsync(Guid id)
     {
         var user = await _context.Users.FindAsync(id);
-        if (user == null)
+        if (user is null)
+        {
             return false;
+        }
 
         _context.Users.Remove(user);
         await _context.SaveChangesAsync();

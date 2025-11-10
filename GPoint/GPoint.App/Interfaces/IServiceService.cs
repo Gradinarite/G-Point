@@ -1,14 +1,14 @@
 using GPoint.DataAccess.Data.Entities;
+using GPoint.Domain.DTOs;
 
 namespace GPoint.App.Interfaces;
 
 public interface IServiceService
 {
-    Task<Service?> GetByIdAsync(Guid id);
-    Task<IEnumerable<Service>> GetAllAsync();
-    Task<IEnumerable<Service>> GetBySpecialistIdAsync(Guid specialistId);
-    Task<Service> CreateAsync(Service service);
-    Task<Service> UpdateAsync(Service service);
+    Task<ServiceDto?> GetByIdAsync(Guid id);
+    Task<IEnumerable<ServiceDto>> GetAllAsync();
+    Task<IEnumerable<ServiceDto>> GetBySpecialistIdAsync(Guid specialistId);
+    Task<ServiceDto> CreateAsync(CreateServiceDto serviceDto);
+    Task<ServiceDto?> UpdateAsync(UpdateServiceDto serviceDto);
     Task<bool> DeleteAsync(Guid id);
 }
-

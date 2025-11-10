@@ -1,7 +1,7 @@
 using GPoint.App.Interfaces;
 using GPoint.DataAccess.Context;
-using GPoint.DataAccess.Data;
 using GPoint.DataAccess.Data.Entities;
+using GPoint.Domain.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace GPoint.App.Services;
@@ -15,100 +15,190 @@ public class SlotService : ISlotService
         _context = context;
     }
 
-    public async Task<Slot?> GetByIdAsync(Guid id)
+    public async Task<SlotDto?> GetByIdAsync(Guid id)
     {
-        return await _context.Slots
+        var slot = await _context.Slots
             .Include(s => s.Service)
             .Include(s => s.Specialist)
             .FirstOrDefaultAsync(s => s.Id == id);
+
+        if (slot is null)
+        {
+            return null;
+        }
+
+        return new SlotDto
+        {
+            Id = slot.Id,
+            ServiceId = slot.ServiceId,
+            SpecialistId = slot.SpecialistId,
+            StartTime = slot.StartTime,
+            EndTime = slot.EndTime,
+            IsBooked = slot.IsBooked
+        };
     }
 
-    public async Task<IEnumerable<Slot>> GetAllAsync()
+    public async Task<IEnumerable<SlotDto>> GetAllAsync()
     {
         return await _context.Slots
-            .Include(s => s.Service)
-            .Include(s => s.Specialist)
+            .Select(s => new SlotDto
+            {
+                Id = s.Id,
+                ServiceId = s.ServiceId,
+                SpecialistId = s.SpecialistId,
+                StartTime = s.StartTime,
+                EndTime = s.EndTime,
+                IsBooked = s.IsBooked
+            })
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Slot>> GetBySpecialistIdAsync(Guid specialistId)
+    public async Task<IEnumerable<SlotDto>> GetBySpecialistIdAsync(Guid specialistId)
     {
         return await _context.Slots
             .Where(s => s.SpecialistId == specialistId)
-            .Include(s => s.Service)
-            .Include(s => s.Specialist)
             .OrderBy(s => s.StartTime)
+            .Select(s => new SlotDto
+            {
+                Id = s.Id,
+                ServiceId = s.ServiceId,
+                SpecialistId = s.SpecialistId,
+                StartTime = s.StartTime,
+                EndTime = s.EndTime,
+                IsBooked = s.IsBooked
+            })
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Slot>> GetByServiceIdAsync(Guid serviceId)
+    public async Task<IEnumerable<SlotDto>> GetByServiceIdAsync(Guid serviceId)
     {
         return await _context.Slots
             .Where(s => s.ServiceId == serviceId)
-            .Include(s => s.Service)
-            .Include(s => s.Specialist)
             .OrderBy(s => s.StartTime)
+            .Select(s => new SlotDto
+            {
+                Id = s.Id,
+                ServiceId = s.ServiceId,
+                SpecialistId = s.SpecialistId,
+                StartTime = s.StartTime,
+                EndTime = s.EndTime,
+                IsBooked = s.IsBooked
+            })
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Slot>> GetAvailableSlotsAsync(Guid specialistId, DateTime startDate, DateTime endDate)
+    public async Task<IEnumerable<SlotDto>> GetAvailableSlotsAsync(Guid specialistId, DateTime startDate, DateTime endDate)
     {
         return await _context.Slots
             .Where(s => s.SpecialistId == specialistId 
-                        && !s.IsBooked 
-                        && s.StartTime >= startDate 
+                        && !s.IsBooked
+                        && s.StartTime >= startDate
                         && s.EndTime <= endDate)
-            .Include(s => s.Service)
-            .Include(s => s.Specialist)
             .OrderBy(s => s.StartTime)
+            .Select(s => new SlotDto
+            {
+                Id = s.Id,
+                ServiceId = s.ServiceId,
+                SpecialistId = s.SpecialistId,
+                StartTime = s.StartTime,
+                EndTime = s.EndTime,
+                IsBooked = s.IsBooked
+            })
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Slot>> GetAvailableSlotsByServiceAsync(Guid serviceId, DateTime startDate, DateTime endDate)
+    public async Task<IEnumerable<SlotDto>> GetAvailableSlotsByServiceAsync(Guid serviceId, DateTime startDate, DateTime endDate)
     {
         return await _context.Slots
             .Where(s => s.ServiceId == serviceId 
-                        && !s.IsBooked 
-                        && s.StartTime >= startDate 
+                        && !s.IsBooked
+                        && s.StartTime >= startDate
                         && s.EndTime <= endDate)
-            .Include(s => s.Service)
-            .Include(s => s.Specialist)
             .OrderBy(s => s.StartTime)
+            .Select(s => new SlotDto
+            {
+                Id = s.Id,
+                ServiceId = s.ServiceId,
+                SpecialistId = s.SpecialistId,
+                StartTime = s.StartTime,
+                EndTime = s.EndTime,
+                IsBooked = s.IsBooked
+            })
             .ToListAsync();
     }
 
-    public async Task<Slot> CreateAsync(Slot slot)
+    public async Task<SlotDto> CreateAsync(CreateSlotDto slotDto)
     {
-        slot.Id = Guid.NewGuid();
-        slot.IsBooked = false;
+        var slot = new Slot
+        {
+            Id = Guid.NewGuid(),
+            ServiceId = slotDto.ServiceId,
+            SpecialistId = slotDto.SpecialistId,
+            StartTime = slotDto.StartTime,
+            EndTime = slotDto.EndTime,
+            IsBooked = false
+        };
+
         _context.Slots.Add(slot);
         await _context.SaveChangesAsync();
-        return slot;
+
+        return new SlotDto
+        {
+            Id = slot.Id,
+            ServiceId = slot.ServiceId,
+            SpecialistId = slot.SpecialistId,
+            StartTime = slot.StartTime,
+            EndTime = slot.EndTime,
+            IsBooked = slot.IsBooked
+        };
     }
 
-    public async Task<Slot> UpdateAsync(Slot slot)
+    public async Task<SlotDto?> UpdateAsync(UpdateSlotDto slotDto)
     {
-        _context.Slots.Update(slot);
+        var slot = await _context.Slots.FindAsync(slotDto.Id);
+        if (slot is null)
+        {
+            return null;
+        }
+
+        slot.StartTime = slotDto.StartTime;
+        slot.EndTime = slotDto.EndTime;
+        slot.ServiceId = slotDto.ServiceId;
+        slot.SpecialistId = slotDto.SpecialistId;
+
         await _context.SaveChangesAsync();
-        return slot;
+
+        return new SlotDto
+        {
+            Id = slot.Id,
+            ServiceId = slot.ServiceId,
+            SpecialistId = slot.SpecialistId,
+            StartTime = slot.StartTime,
+            EndTime = slot.EndTime,
+            IsBooked = slot.IsBooked
+        };
     }
 
     public async Task<bool> DeleteAsync(Guid id)
     {
         var slot = await _context.Slots.FindAsync(id);
-        if (slot == null)
+        if (slot is null)
+        {
             return false;
+        }
 
         _context.Slots.Remove(slot);
         await _context.SaveChangesAsync();
         return true;
     }
 
-    public async Task<bool> BookSlotAsync(Guid slotId, Guid appointmentId)
+    public async Task<bool> BookSlotAsync(Guid slotId)
     {
         var slot = await _context.Slots.FindAsync(slotId);
-        if (slot == null || slot.IsBooked)
+        if (slot is null || slot.IsBooked)
+        {
             return false;
+        }
 
         slot.IsBooked = true;
         await _context.SaveChangesAsync();
@@ -118,8 +208,10 @@ public class SlotService : ISlotService
     public async Task<bool> ReleaseSlotAsync(Guid slotId)
     {
         var slot = await _context.Slots.FindAsync(slotId);
-        if (slot == null)
+        if (slot is null)
+        {
             return false;
+        }
 
         slot.IsBooked = false;
         await _context.SaveChangesAsync();

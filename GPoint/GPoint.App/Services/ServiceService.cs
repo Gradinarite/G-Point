@@ -1,7 +1,7 @@
 using GPoint.App.Interfaces;
 using GPoint.DataAccess.Context;
-using GPoint.DataAccess.Data;
 using GPoint.DataAccess.Data.Entities;
+using GPoint.Domain.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace GPoint.App.Services;
@@ -15,55 +15,116 @@ public class ServiceService : IServiceService
         _context = context;
     }
 
-    public async Task<Service?> GetByIdAsync(Guid id)
+    public async Task<ServiceDto?> GetByIdAsync(Guid id)
     {
-        return await _context.Services
+        var service = await _context.Services
             .Include(s => s.Specialist)
             .Include(s => s.Slots)
             .FirstOrDefaultAsync(s => s.ServiceId == id);
+
+        if (service is null)
+        {
+            return null;
+        }
+
+        return new ServiceDto
+        {
+            ServiceId = service.ServiceId,
+            Name = service.Name,
+            Description = service.Description,
+            DurationInMinutes = service.DurationInMinutes,
+            SpecialistId = service.SpecialistId
+        };
     }
 
-    public async Task<IEnumerable<Service>> GetAllAsync()
+    public async Task<IEnumerable<ServiceDto>> GetAllAsync()
     {
         return await _context.Services
-            .Include(s => s.Specialist)
-            .Include(s => s.Slots)
+            .Select(s => new ServiceDto
+            {
+                ServiceId = s.ServiceId,
+                Name = s.Name,
+                Description = s.Description,
+                DurationInMinutes = s.DurationInMinutes,
+                SpecialistId = s.SpecialistId
+            })
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Service>> GetBySpecialistIdAsync(Guid specialistId)
+    public async Task<IEnumerable<ServiceDto>> GetBySpecialistIdAsync(Guid specialistId)
     {
         return await _context.Services
             .Where(s => s.SpecialistId == specialistId)
-            .Include(s => s.Specialist)
-            .Include(s => s.Slots)
+            .Select(s => new ServiceDto
+            {
+                ServiceId = s.ServiceId,
+                Name = s.Name,
+                Description = s.Description,
+                DurationInMinutes = s.DurationInMinutes,
+                SpecialistId = s.SpecialistId
+            })
             .ToListAsync();
     }
 
-    public async Task<Service> CreateAsync(Service service)
+    public async Task<ServiceDto> CreateAsync(CreateServiceDto serviceDto)
     {
-        service.ServiceId = Guid.NewGuid();
+        var service = new Service
+        {
+            ServiceId = Guid.NewGuid(),
+            Name = serviceDto.Name,
+            Description = serviceDto.Description,
+            DurationInMinutes = serviceDto.DurationInMinutes,
+            SpecialistId = serviceDto.SpecialistId
+        };
+
         _context.Services.Add(service);
         await _context.SaveChangesAsync();
-        return service;
+
+        return new ServiceDto
+        {
+            ServiceId = service.ServiceId,
+            Name = service.Name,
+            Description = service.Description,
+            DurationInMinutes = service.DurationInMinutes,
+            SpecialistId = service.SpecialistId
+        };
     }
 
-    public async Task<Service> UpdateAsync(Service service)
+    public async Task<ServiceDto?> UpdateAsync(UpdateServiceDto serviceDto)
     {
-        _context.Services.Update(service);
+        var service = await _context.Services.FindAsync(serviceDto.ServiceId);
+        if (service is null)
+        {
+            return null;
+        }
+
+        service.Name = serviceDto.Name;
+        service.Description = serviceDto.Description;
+        service.DurationInMinutes = serviceDto.DurationInMinutes;
+        service.SpecialistId = serviceDto.SpecialistId;
+
         await _context.SaveChangesAsync();
-        return service;
+
+        return new ServiceDto
+        {
+            ServiceId = service.ServiceId,
+            Name = service.Name,
+            Description = service.Description,
+            DurationInMinutes = service.DurationInMinutes,
+            SpecialistId = service.SpecialistId
+        };
     }
 
     public async Task<bool> DeleteAsync(Guid id)
     {
         var service = await _context.Services.FindAsync(id);
-        if (service == null)
+        if (service is null)
+        {
             return false;
+        }
 
         _context.Services.Remove(service);
         await _context.SaveChangesAsync();
         return true;
     }
 }
-

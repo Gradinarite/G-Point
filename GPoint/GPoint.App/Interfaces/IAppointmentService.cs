@@ -1,15 +1,16 @@
 using GPoint.DataAccess.Data.Entities;
+using GPoint.Domain.DTOs;
 
 namespace GPoint.App.Interfaces;
 
 public interface IAppointmentService
 {
-    Task<Appointment?> GetByIdAsync(Guid id);
-    Task<IEnumerable<Appointment>> GetAllAsync();
-    Task<IEnumerable<Appointment>> GetByUserIdAsync(Guid userId);
-    Task<IEnumerable<Appointment>> GetBySpecialistIdAsync(Guid specialistId);
-    Task<Appointment> CreateAsync(Appointment appointment);
-    Task<Appointment> UpdateAsync(Appointment appointment);
+    Task<AppointmentDto?> GetByIdAsync(Guid id);
+    Task<IEnumerable<AppointmentDto>> GetAllAsync();
+    Task<IEnumerable<AppointmentDto>> GetByUserIdAsync(Guid userId);
+    Task<IEnumerable<AppointmentDto>> GetBySpecialistIdAsync(Guid specialistId);
+    Task<AppointmentDto> CreateAsync(CreateAppointmentDto appointmentDto);
+    Task<AppointmentDto?> UpdateAsync(UpdateAppointmentDto appointmentDto);
     Task<bool> DeleteAsync(Guid id);
     Task<bool> CancelAppointmentAsync(Guid id);
 }

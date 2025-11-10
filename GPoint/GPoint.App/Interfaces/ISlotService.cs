@@ -1,19 +1,19 @@
 using GPoint.DataAccess.Data.Entities;
+using GPoint.Domain.DTOs;
 
 namespace GPoint.App.Interfaces;
 
 public interface ISlotService
 {
-    Task<Slot?> GetByIdAsync(Guid id);
-    Task<IEnumerable<Slot>> GetAllAsync();
-    Task<IEnumerable<Slot>> GetBySpecialistIdAsync(Guid specialistId);
-    Task<IEnumerable<Slot>> GetByServiceIdAsync(Guid serviceId);
-    Task<IEnumerable<Slot>> GetAvailableSlotsAsync(Guid specialistId, DateTime startDate, DateTime endDate);
-    Task<IEnumerable<Slot>> GetAvailableSlotsByServiceAsync(Guid serviceId, DateTime startDate, DateTime endDate);
-    Task<Slot> CreateAsync(Slot slot);
-    Task<Slot> UpdateAsync(Slot slot);
+    Task<SlotDto?> GetByIdAsync(Guid id);
+    Task<IEnumerable<SlotDto>> GetAllAsync();
+    Task<IEnumerable<SlotDto>> GetBySpecialistIdAsync(Guid specialistId);
+    Task<IEnumerable<SlotDto>> GetByServiceIdAsync(Guid serviceId);
+    Task<IEnumerable<SlotDto>> GetAvailableSlotsAsync(Guid specialistId, DateTime startDate, DateTime endDate);
+    Task<IEnumerable<SlotDto>> GetAvailableSlotsByServiceAsync(Guid serviceId, DateTime startDate, DateTime endDate);
+    Task<SlotDto> CreateAsync(CreateSlotDto slotDto);
+    Task<SlotDto?> UpdateAsync(UpdateSlotDto slotDto);
     Task<bool> DeleteAsync(Guid id);
-    Task<bool> BookSlotAsync(Guid slotId, Guid appointmentId);
+    Task<bool> BookSlotAsync(Guid slotId);
     Task<bool> ReleaseSlotAsync(Guid slotId);
 }
-
