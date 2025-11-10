@@ -90,7 +90,7 @@ public class UserService : IUserService
             Id = Guid.NewGuid(),
             FullName = userDto.FullName,
             Email = userDto.Email,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.PasswordHash),
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password),
             Role = userDto.Role
         };
 

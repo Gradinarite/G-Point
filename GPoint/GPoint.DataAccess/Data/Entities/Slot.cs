@@ -31,4 +31,7 @@ public class Slot
     [ForeignKey("SpecialistId")]
     [InverseProperty("Slots")]
     public User Specialist { get; set; } = null!;
+    
+    [InverseProperty("Slot")]
+    public Appointment? Appointment { get; set; }
 }
