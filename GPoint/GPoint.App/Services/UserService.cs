@@ -1,4 +1,5 @@
 using GPoint.App.Interfaces;
+using GPoint.DataAccess.Context;
 using GPoint.DataAccess.Data;
 using GPoint.DataAccess.Data.Entities;
 using GPoint.Domain.Enums;

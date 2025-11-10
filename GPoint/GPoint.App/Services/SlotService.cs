@@ -1,4 +1,5 @@
 using GPoint.App.Interfaces;
+using GPoint.DataAccess.Context;
 using GPoint.DataAccess.Data;
 using GPoint.DataAccess.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,6 @@ public class SlotService : ISlotService
         return await _context.Slots
             .Include(s => s.Service)
             .Include(s => s.Specialist)
-            .Include(s => s.Appointment)
             .FirstOrDefaultAsync(s => s.Id == id);
     }
 
@@ -111,7 +111,6 @@ public class SlotService : ISlotService
             return false;
 
         slot.IsBooked = true;
-        slot.AppointmentId = appointmentId;
         await _context.SaveChangesAsync();
         return true;
     }
@@ -123,9 +122,7 @@ public class SlotService : ISlotService
             return false;
 
         slot.IsBooked = false;
-        slot.AppointmentId = null;
         await _context.SaveChangesAsync();
         return true;
     }
 }
-

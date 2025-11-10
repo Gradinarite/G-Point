@@ -7,24 +7,21 @@ public class Slot
 {
     [Key]
     public Guid Id { get; set; }
+    
     [Required]
     public Guid SpecialistId { get; set; }
-    [Required]
-    public DateTime StartTime { get; set; }
-    [Required]
-    public DateTime EndTime { get; set; }
-    [Required]
-    public bool IsBooked { get; set; }
-    
-    // Optional Appointment this slot is reserved for
-    public Guid? AppointmentId { get; set; }
-
-    [ForeignKey("AppointmentId")]
-    [InverseProperty("Slot")]
-    public Appointment? Appointment { get; set; }
     
     [Required]
     public Guid ServiceId { get; set; }
+    
+    [Required]
+    public DateTime StartTime { get; set; }
+    
+    [Required]
+    public DateTime EndTime { get; set; }
+    
+    [Required]
+    public bool IsBooked { get; set; }
     
     [Required]
     [ForeignKey("ServiceId")]

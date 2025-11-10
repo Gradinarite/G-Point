@@ -1,4 +1,5 @@
 using GPoint.App.Interfaces;
+using GPoint.DataAccess.Context;
 using GPoint.DataAccess.Data;
 using GPoint.DataAccess.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -85,11 +86,13 @@ public class AppointmentService : IAppointmentService
     public async Task<bool> CancelAppointmentAsync(Guid id)
     {
         var appointment = await GetByIdAsync(id);
-        if (appointment == null)
+        if (appointment is null)
+        {
             return false;
+        }
 
         // Release the slot if one was booked
-        if (appointment.Slot != null)
+        if (appointment.Slot is not null)
         {
             await _slotService.ReleaseSlotAsync(appointment.Slot.Id);
         }
