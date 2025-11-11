@@ -10,6 +10,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 Env.Load();
 
+builder.Services.AddAuthorization();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReact",
+        policy  =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<GPointDbContext>(options =>
     options.UseSqlServer(Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")));
@@ -36,6 +48,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting();
+app.UseCors("AllowReact");
 app.UseAuthorization();
 app.MapControllers();
 
