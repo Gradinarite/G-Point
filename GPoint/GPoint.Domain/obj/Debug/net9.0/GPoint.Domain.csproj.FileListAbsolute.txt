@@ -1,0 +1,12 @@
+C:\G-Point\GPoint\GPoint.Domain\bin\Debug\net9.0\GPoint.Domain.deps.json
+C:\G-Point\GPoint\GPoint.Domain\bin\Debug\net9.0\GPoint.Domain.dll
+C:\G-Point\GPoint\GPoint.Domain\bin\Debug\net9.0\GPoint.Domain.pdb
+C:\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\GPoint.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\GPoint.Domain.AssemblyInfoInputs.cache
+C:\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\GPoint.Domain.AssemblyInfo.cs
+C:\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\GPoint.Domain.csproj.CoreCompileInputs.cache
+C:\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\GPoint.Domain.sourcelink.json
+C:\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\GPoint.Domain.dll
+C:\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\refint\GPoint.Domain.dll
+C:\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\GPoint.Domain.pdb
+C:\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\ref\GPoint.Domain.dll
