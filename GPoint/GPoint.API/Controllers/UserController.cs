@@ -18,7 +18,6 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{id}")]
-
     public async Task<IActionResult> GetUserById(Guid id)
     {
         var user = await UserService.GetByIdAsync(id);
@@ -29,10 +28,54 @@ public class UserController : ControllerBase
         return Ok(user);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetUserByEmail(string email)
+    {
+        var user = await UserService.GetByEmailAsync(email);
+        if (user is null)
+        {
+            return NotFound();
+        }
+        return Ok(user);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllUsers()
+    {
+        var users = await UserService.GetAllAsync();
+        return Ok(users); 
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetSpecialists()
+    {
+        var specialists = await UserService.GetSpecialistsAsync();
+        return Ok(specialists);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateUser(CreateUserDto createUserDto)
     {
         var createdUser = await UserService.CreateAsync(createUserDto);
         return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
+    }
+
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateUser(Guid id, UpdateUserDto updatedUserDto)
+    {
+        var result = await UserService.UpdateAsync(id, updatedUserDto);
+        if (result is null)
+        {
+            return NotFound();
+        }
+        
+        return Ok(result);
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteUserById(Guid id)
+    {
+        await UserService.DeleteAsync(id);
+        return NoContent();
     }
 }

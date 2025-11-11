@@ -106,17 +106,21 @@ public class UserService : IUserService
         };
     }
 
-    public async Task<UserDto?> UpdateAsync(UserDto userDto)
+    public async Task<UserDto?> UpdateAsync(Guid id, UpdateUserDto updatedUserDto)
     {
-        var user = await _context.Users.FindAsync(userDto.Id);
+        var user = await _context.Users.FindAsync(id);
         if (user is null)
         {
             return null;
         }
 
-        user.FullName = userDto.FullName;
-        user.Email = userDto.Email;
-        user.Role = userDto.Role;
+        user.FullName = updatedUserDto.FullName;
+        user.Email = updatedUserDto.Email;
+        user.Role = updatedUserDto.Role;
+        if (!string.IsNullOrEmpty(updatedUserDto.Password))
+        {
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(updatedUserDto.Password);
+        }
 
         await _context.SaveChangesAsync();
 
