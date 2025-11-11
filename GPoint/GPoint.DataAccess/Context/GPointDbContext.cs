@@ -40,13 +40,25 @@ public partial class GPointDbContext : DbContext
             .HasOne(s => s.Specialist)
             .WithMany(u => u.Slots)
             .HasForeignKey(s => s.SpecialistId)
-            .OnDelete(DeleteBehavior.Restrict); // <- stop cascade here
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Slot>()
+            .HasOne(s => s.Service)
+            .WithMany(sv => sv.Slots)
+            .HasForeignKey(s => s.ServiceId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Appointment>()
             .HasOne(a => a.Slot)
             .WithOne(s => s.Appointment)
             .HasForeignKey<Appointment>(a => a.SlotId)
-            .OnDelete(DeleteBehavior.Cascade); // keep this cascade
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Appointment>()
+            .HasOne(a => a.Service)
+            .WithMany()
+            .HasForeignKey(a => a.ServiceId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Appointment>()
             .HasOne(a => a.User)
