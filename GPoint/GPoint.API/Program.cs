@@ -16,9 +16,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReact",
         policy  =>
         {
-            policy.WithOrigins("http://localhost:5173")
+            policy.WithOrigins("http://localhost:5174")
                 .AllowAnyHeader()
-                .AllowAnyMethod();
+                .AllowAnyMethod()
+                .AllowCredentials();
         });
 });
 
@@ -47,8 +48,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseRouting();
 app.UseCors("AllowReact");
+app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();
 

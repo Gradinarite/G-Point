@@ -10,3 +10,15 @@ C:\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\GPoint.Domain.dll
 C:\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\refint\GPoint.Domain.dll
 C:\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\GPoint.Domain.pdb
 C:\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\ref\GPoint.Domain.dll
+C:\Users\stili\WebstormProjects\G-Point\GPoint\GPoint.Domain\bin\Debug\net9.0\GPoint.Domain.deps.json
+C:\Users\stili\WebstormProjects\G-Point\GPoint\GPoint.Domain\bin\Debug\net9.0\GPoint.Domain.dll
+C:\Users\stili\WebstormProjects\G-Point\GPoint\GPoint.Domain\bin\Debug\net9.0\GPoint.Domain.pdb
+C:\Users\stili\WebstormProjects\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\GPoint.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\stili\WebstormProjects\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\GPoint.Domain.AssemblyInfoInputs.cache
+C:\Users\stili\WebstormProjects\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\GPoint.Domain.AssemblyInfo.cs
+C:\Users\stili\WebstormProjects\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\GPoint.Domain.csproj.CoreCompileInputs.cache
+C:\Users\stili\WebstormProjects\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\GPoint.Domain.sourcelink.json
+C:\Users\stili\WebstormProjects\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\GPoint.Domain.dll
+C:\Users\stili\WebstormProjects\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\refint\GPoint.Domain.dll
+C:\Users\stili\WebstormProjects\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\GPoint.Domain.pdb
+C:\Users\stili\WebstormProjects\G-Point\GPoint\GPoint.Domain\obj\Debug\net9.0\ref\GPoint.Domain.dll
