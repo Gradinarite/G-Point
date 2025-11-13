@@ -40,11 +40,14 @@
 - **GPoint.Domain**: Domain models, DTOs, and enums shared across the solution.
 
 ### Key Features
-- **Controllers**: Handle HTTP requests for appointments, services, slots, and users.
-- **Services**: Business logic for managing entities and operations.
-- **Data Access**: Entity Framework Core for ORM, migrations, and database context.
-- **DTOs**: Data Transfer Objects for API communication.
-- **Enums**: User roles and other domain-specific types.
+
+- **Controllers**: Handle HTTP requests for appointments, services, slots, and users. Each controller validates input, invokes business logic, and returns appropriate responses.
+- **Services**: Encapsulate business logic for managing entities and operations. Coordinate between controllers and data access, enforcing business rules.
+- **Data Access**: Entity Framework Core for ORM, migrations, and database context. Handles CRUD operations, relationships, and migrations for all entities.
+- **DTOs**: Data Transfer Objects for API communication. Ensure only necessary data is exposed to clients, improving security and performance.
+- **Enums**: User roles and other domain-specific types. Maintain type safety and clarity in business logic.
+- **Authentication & Authorization**: JWT-based authentication and role-based access control for secure endpoints.
+- **Error Handling & Validation**: Centralized error handling and input validation for robust API responses.
 
 ### Configuration
 - `appsettings.json` and `appsettings.Development.json`: Store environment-specific settings.
@@ -73,11 +76,15 @@
 - **main.tsx**: Entry point.
 
 ### Key Features
-- **Modern UI**: Built with React and Vite for fast development and hot reloading.
-- **Type Safety**: TypeScript throughout for reliability.
-- **API Integration**: Communicates with the backend via RESTful endpoints.
-- **Authentication**: Login component for user access.
-- **Reusable Components**: Shared UI and logic for maintainability.
+
+- **Modern UI**: Built with React and Vite for fast development and hot reloading. Responsive design for desktop and mobile.
+- **Type Safety**: TypeScript throughout for reliability and maintainability.
+- **API Integration**: Communicates with the backend via RESTful endpoints using Axios. Handles authentication, CRUD, and error states.
+- **Authentication**: Login component for user access, with JWT token management and protected routes.
+- **Reusable Components**: Shared UI and logic for maintainability. Includes appointment forms, service lists, slot pickers, and more.
+- **API Tester**: Built-in tool for testing backend endpoints directly from the frontend.
+- **State Management**: Uses React hooks and context for managing global state (user, appointments, etc.).
+- **Styling**: CSS Modules for scoped, maintainable styles.
 
 ### How to Run (Frontend)
 1. Navigate to `GPoint-Front/GPoint`.
@@ -118,24 +125,63 @@
 
 ## Folder Structure
 
+
 ```
 GPoint/
-	GPoint.sln
-	GPoint.API/
-	GPoint.App/
-	GPoint.DataAccess/
-	GPoint.Domain/
-GPoint-Front/
-	GPoint/
-		src/
-		public/
-		...
+│
+├── GPoint.sln                # Solution file for all backend projects
+│
+├── GPoint.API/               # ASP.NET Core Web API
+│   ├── Controllers/          # API controllers for appointments, services, slots, users
+│   ├── Properties/           # Launch settings for local development
+│   ├── appsettings.json      # Main configuration file
+│   ├── appsettings.Development.json # Development-specific config
+│   ├── .env                  # Environment variables (optional)
+│   └── ...                   # Project files, obj/, bin/
+│
+├── GPoint.App/               # Application/business logic layer
+│   ├── Interfaces/           # Service interfaces for each domain entity
+│   ├── Services/             # Service implementations
+│   └── ...                   # Project files, obj/, bin/
+│
+├── GPoint.DataAccess/        # Data access layer
+│   ├── Context/              # EF Core DbContext
+│   ├── Data/Entities/        # Entity classes for appointments, services, slots, users
+│   ├── Migrations/           # Database migration files
+│   ├── .env                  # Environment variables (optional)
+│   └── ...                   # Project files, obj/, bin/
+│
+├── GPoint.Domain/            # Domain models, DTOs, enums
+│   ├── DTOs/                 # Data Transfer Objects for API communication
+│   ├── Enums/                # Domain enums (e.g., UserRole)
+│   └── ...                   # Project files, obj/, bin/
+│
+└── GPoint-Front/
+	└── GPoint/
+		├── src/
+		│   ├── components/   # React components (login, API tester, shared UI)
+		│   │   └── login/    # Login page/component
+		│   │   └── shared/   # Shared logic and UI
+		│   │   └── ...
+		│   ├── shared/
+		│   │   ├── api/      # API client modules for backend endpoints
+		│   │   ├── types/    # TypeScript types for entities
+		│   │   └── ...
+		│   ├── assets/       # Static assets (images, icons)
+		│   ├── App.tsx       # Main React component
+		│   ├── main.tsx      # Entry point
+		│   └── ...
+		├── public/           # Static files (index.html, favicon, etc.)
+		├── package.json      # Frontend dependencies and scripts
+		├── tsconfig.json     # TypeScript configuration
+		├── vite.config.ts    # Vite build configuration
+		└── ...
 ```
 
 ---
 
 ## License
-Specify your license here (MIT, Apache, etc.)
+
 
 ---
 
