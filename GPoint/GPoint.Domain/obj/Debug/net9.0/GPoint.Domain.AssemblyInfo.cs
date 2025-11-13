@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GPoint.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f525529c067f38d4f118a11d21c4f0de4af5153c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+96deed5a99c890c3d8c4bde1975c9faa36ffc5ec")]
 [assembly: System.Reflection.AssemblyProductAttribute("GPoint.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GPoint.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

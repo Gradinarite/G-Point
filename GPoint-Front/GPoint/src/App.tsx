@@ -1,11 +1,11 @@
-import { FetchUser } from './components/login/Login'
+import { ApiTester } from './components/ApiTester'
 import './App.css'
 
 function App() {
 
   return (
     <>
-      <FetchUser />
+      <ApiTester />
     </>
   )
 }
