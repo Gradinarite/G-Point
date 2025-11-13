@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Login from './components/login/Login';
 import Register from './components/login/Register';
-import Home from './components/Home';
+import Home from './components/home/Home';
 import type { User } from './shared/types/user';
 import './App.css';
 
