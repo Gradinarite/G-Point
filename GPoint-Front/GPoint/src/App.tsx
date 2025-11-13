@@ -38,6 +38,11 @@ function App() {
     localStorage.setItem('currentUser', JSON.stringify(user));
   };
 
+  const handleUserUpdate = (user: User) => {
+    setCurrentUser(user);
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  };
+
   const handleLogout = () => {
     setCurrentUser(null);
     setCurrentPage('login');
@@ -63,7 +68,9 @@ function App() {
       {currentPage === 'dashboard' && currentUser && (
         <Home 
           userName={currentUser.fullName}
+          user={currentUser}
           onLogout={handleLogout}
+          onUserUpdate={handleUserUpdate}
         />
       )}
     </>

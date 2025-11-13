@@ -61,10 +61,6 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.nav-item.active .nav-icon {
-  filter: brightness(0) invert(1);
-}
-
 .sidebar-footer {
   margin-top: auto;
 }
@@ -119,6 +115,16 @@
   outline: none;
   font-size: 14px;
   padding: 4px 8px;
+  color: #333;
+}
+
+.search-bar input::placeholder {
+  color: #999;
+}
+
+.search-bar:focus-within {
+  background: #e8e8e8;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
 }
 
 .search-btn {
@@ -265,4 +271,123 @@
   .search-bar {
     width: 200px;
   }
+}
+
+/* Placeholder Content */
+.placeholder-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.placeholder-content h1 {
+  margin: 0 0 12px 0;
+  font-size: 32px;
+  color: #333;
+  font-weight: 600;
+}
+
+.placeholder-content p {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+}
+
+/* Dark Mode Styles */
+.dark-mode .home-container {
+  background: #1a1a1a;
+}
+
+.dark-mode .sidebar {
+  background: #2a2a2a;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .nav-item:hover {
+  background: #3a3a3a;
+}
+
+.dark-mode .content-header {
+  background: #2a2a2a;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .header-left h1 {
+  color: #e0e0e0;
+}
+
+.dark-mode .search-bar {
+  background: #1a1a1a;
+}
+
+.dark-mode .search-bar input {
+  color: #e0e0e0;
+}
+
+.dark-mode .search-bar input::placeholder {
+  color: #666;
+}
+
+.dark-mode .search-bar:focus-within {
+  background: #333;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
+}
+
+.dark-mode .services-section {
+  background: #1a1a1a;
+}
+
+.dark-mode .section-header h2 {
+  color: #e0e0e0;
+}
+
+.dark-mode .toggle-btn {
+  background: #2a2a2a;
+  border-color: #3a3a3a;
+  color: #e0e0e0;
+}
+
+.dark-mode .service-card {
+  background: #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .service-card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .card-content h3 {
+  color: #e0e0e0;
+}
+
+.dark-mode .card-content p {
+  color: #999;
+}
+
+.dark-mode .placeholder-content {
+  background: #1a1a1a;
+}
+
+.dark-mode .placeholder-content h1 {
+  color: #e0e0e0;
+}
+
+.dark-mode .placeholder-content p {
+  color: #999;
+}
+
+.dark-mode .services-section::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+.dark-mode .services-section::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+}
+
+.dark-mode .services-section::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
 }
