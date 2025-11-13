@@ -188,17 +188,36 @@
   background: white;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s;
+  color: #667eea;
+  font-weight: 600;
+  line-height: 1;
 }
 
-.toggle-btn.active {
+.toggle-btn:hover {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-color: transparent;
   color: white;
+}
+
+.btn-create-service {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-create-service:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 .services-grid {
@@ -208,14 +227,22 @@
   margin-bottom: 48px;
 }
 
+.services-grid p {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-size: 16px;
+  grid-column: 1 / -1;
+}
+
 .service-card {
   background: white;
   border-radius: 12px;
-  padding: 24px;
+  padding: 0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition: all 0.3s;
   cursor: pointer;
-  min-height: 120px;
+  min-height: 200px;
   display: flex;
   flex-direction: column;
 }
@@ -223,6 +250,56 @@
 .service-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.service-header {
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.specialist-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.specialist-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.specialist-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.specialist-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.service-duration {
+  font-size: 12px;
+  color: #666;
+}
+
+.card-content {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .card-content h3 {
@@ -233,10 +310,48 @@
 }
 
 .card-content p {
-  margin: 0;
+  margin: 0 0 12px 0;
   font-size: 14px;
   color: #666;
   line-height: 1.5;
+  flex: 1;
+}
+
+.btn-book {
+  align-self: flex-end;
+  padding: 10px 28px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.3s;
+}
+
+.btn-book:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.btn-edit-service {
+  align-self: flex-start;
+  padding: 10px 20px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 12px;
+}
+
+.btn-edit-service:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
 }
 
 /* Scrollbar styling */
@@ -341,6 +456,10 @@
   background: #1a1a1a;
 }
 
+.dark-mode .services-grid p {
+  color: #999;
+}
+
 .dark-mode .section-header h2 {
   color: #e0e0e0;
 }
@@ -348,7 +467,13 @@
 .dark-mode .toggle-btn {
   background: #2a2a2a;
   border-color: #3a3a3a;
-  color: #e0e0e0;
+  color: #667eea;
+}
+
+.dark-mode .toggle-btn:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: transparent;
+  color: white;
 }
 
 .dark-mode .service-card {
@@ -358,6 +483,18 @@
 
 .dark-mode .service-card:hover {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .service-header {
+  border-bottom-color: #3a3a3a;
+}
+
+.dark-mode .specialist-name {
+  color: #e0e0e0;
+}
+
+.dark-mode .service-duration {
+  color: #999;
 }
 
 .dark-mode .card-content h3 {

@@ -26,6 +26,14 @@ function App() {
     }
   }, []);
 
+  // Apply dark mode on mount
+  useEffect(() => {
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark-mode');
+    }
+  }, []);
+
   const handleLoginSuccess = (user: User) => {
     setCurrentUser(user);
     setCurrentPage('dashboard');

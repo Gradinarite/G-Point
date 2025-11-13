@@ -88,6 +88,18 @@ public class AppointmentService : IAppointmentService
 
     public async Task<AppointmentDto> CreateAsync(CreateAppointmentDto appointmentDto)
     {
+        // Check if the slot is already booked
+        var slot = await _context.Slots.FindAsync(appointmentDto.SlotId);
+        if (slot == null)
+        {
+            throw new InvalidOperationException("Slot not found");
+        }
+        
+        if (slot.IsBooked)
+        {
+            throw new InvalidOperationException("This time slot is already booked");
+        }
+
         var appointment = new Appointment
         {
             Id = Guid.NewGuid(),
@@ -96,6 +108,9 @@ public class AppointmentService : IAppointmentService
             ServiceId = appointmentDto.ServiceId,
             SlotId = appointmentDto.SlotId
         };
+
+        // Mark the slot as booked
+        slot.IsBooked = true;
 
         _context.Appointments.Add(appointment);
         await _context.SaveChangesAsync();
@@ -141,6 +156,13 @@ public class AppointmentService : IAppointmentService
         if (appointment is null)
         {
             return false;
+        }
+
+        // Free up the slot when deleting the appointment
+        var slot = await _context.Slots.FindAsync(appointment.SlotId);
+        if (slot != null)
+        {
+            slot.IsBooked = false;
         }
 
         _context.Appointments.Remove(appointment);
