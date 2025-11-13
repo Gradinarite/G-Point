@@ -32,8 +32,8 @@ jobs:
         env:
           WIKI_ACTION_TOKEN: ${{ secrets.WIKI_ACTION_TOKEN }}
 
-      # Run git-wiki-builder with env telling it the wiki dir
-      - run: git-wiki-builder wiki
+      # Run git-wiki-builder in the wiki directory
+      - run: cd wiki && git-wiki-builder
         env:
           GITHUB_TOKEN: ${{ secrets.WIKI_ACTION_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
