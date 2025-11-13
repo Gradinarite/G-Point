@@ -13,4 +13,5 @@ public interface IAppointmentService
     Task<AppointmentDto?> UpdateAsync(UpdateAppointmentDto appointmentDto);
     Task<bool> DeleteAsync(Guid id);
     Task<bool> CancelAppointmentAsync(Guid id);
+    Task<bool> CompleteAppointmentAsync(Guid id);
 }

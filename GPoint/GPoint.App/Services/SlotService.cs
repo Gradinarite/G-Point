@@ -73,6 +73,7 @@ public class SlotService : ISlotService
     public async Task<IEnumerable<SlotDto>> GetByServiceIdAsync(Guid serviceId)
     {
         return await _context.Slots
+            .AsNoTracking()
             .Where(s => s.ServiceId == serviceId)
             .OrderBy(s => s.StartTime)
             .Select(s => new SlotDto
@@ -214,6 +215,7 @@ public class SlotService : ISlotService
         }
 
         slot.IsBooked = false;
+        _context.Entry(slot).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
         await _context.SaveChangesAsync();
         return true;
     }

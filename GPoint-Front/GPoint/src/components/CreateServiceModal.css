@@ -24,7 +24,7 @@
 .modal-content {
   background: white;
   width: 90%;
-  max-width: 500px;
+  max-width: 800px;
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.3s ease;
@@ -275,10 +275,16 @@
 
 .time-slot-input {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr auto;
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   align-items: end;
   margin-bottom: 16px;
+}
+
+.time-slot-input .btn-add-slot {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: 8px;
 }
 
 .btn-add-slot {

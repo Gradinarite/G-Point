@@ -4,6 +4,7 @@ export interface Appointment {
   specialistId: string;
   serviceId: string;
   slotId: string;
+  status: number; // 1 = Scheduled, 2 = Completed, 3 = Cancelled
 }
 
 export interface CreateAppointment {

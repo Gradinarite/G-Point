@@ -87,4 +87,15 @@ public class AppointmentController : ControllerBase
         }
         return NoContent();
     }
+
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> CompleteAppointment(Guid id)
+    {
+        var result = await AppointmentService.CompleteAppointmentAsync(id);
+        if (!result)
+        {
+            return NotFound();
+        }
+        return NoContent();
+    }
 }

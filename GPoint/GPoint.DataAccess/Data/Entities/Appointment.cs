@@ -24,6 +24,9 @@ public class Appointment
     [Required] 
     public Guid ServiceId { get; set; }
 
+    // Status: 1 = Scheduled, 2 = Completed, 3 = Cancelled
+    public int Status { get; set; } = 1;
+
     [ForeignKey("SpecialistId")]
     [InverseProperty("SpecialistAppointments")]
     public User Specialist { get; set; } = null!;

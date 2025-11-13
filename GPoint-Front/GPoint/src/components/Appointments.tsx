@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchAppointmentsByUserId, fetchAppointmentsBySpecialistId, deleteAppointment } from '../shared/api/appointment';
+import { fetchAppointmentsByUserId, fetchAppointmentsBySpecialistId, cancelAppointment, completeAppointment } from '../shared/api/appointment';
 import { fetchUser } from '../shared/api/user';
 import { fetchService } from '../shared/api/service';
 import { fetchSlot } from '../shared/api/slot';
@@ -13,6 +13,7 @@ import './Appointments.css';
 interface AppointmentsProps {
   userId: string;
   userRole?: number;
+  onAppointmentChange?: () => void;
 }
 
 interface AppointmentWithDetails extends Appointment {
@@ -28,12 +29,13 @@ interface ServiceGroup {
   appointments: AppointmentWithDetails[];
 }
 
-export default function Appointments({ userId, userRole }: AppointmentsProps) {
+export default function Appointments({ userId, userRole, onAppointmentChange }: AppointmentsProps) {
   const [appointments, setAppointments] = useState<AppointmentWithDetails[]>([]);
   const [serviceGroups, setServiceGroups] = useState<ServiceGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [cancellingId, setCancellingId] = useState<string | null>(null);
+  const [completingId, setCompletingId] = useState<string | null>(null);
 
   const isSpecialist = userRole === UserRoles.Specialist;
 
@@ -50,9 +52,14 @@ export default function Appointments({ userId, userRole }: AppointmentsProps) {
         ? await fetchAppointmentsBySpecialistId(userId)
         : await fetchAppointmentsByUserId(userId);
       
+      // Filter appointments based on role:
+      // - Regular users: only scheduled (status=1 or no status for legacy)
+      // - Specialists: only scheduled (1), hide completed (2) and cancelled (3)
+      const filteredData = data.filter(apt => apt.status === 1 || !apt.status);
+      
       // Fetch details for each appointment
       const appointmentsWithDetails = await Promise.all(
-        data.map(async (appointment) => {
+        filteredData.map(async (appointment) => {
           try {
             const service = await fetchService(appointment.serviceId);
             const slot = await fetchSlot(appointment.slotId);
@@ -126,14 +133,36 @@ export default function Appointments({ userId, userRole }: AppointmentsProps) {
 
     setCancellingId(appointmentId);
     try {
-      await deleteAppointment(appointmentId);
+      await cancelAppointment(appointmentId);
       // Reload appointments after cancellation
       await loadAppointments();
+      // Notify parent to refresh other components
+      onAppointmentChange?.();
     } catch (err) {
       setError('Failed to cancel appointment');
       console.error('Cancel error:', err);
     } finally {
       setCancellingId(null);
+    }
+  };
+
+  const handleCompleteAppointment = async (appointmentId: string) => {
+    if (!confirm('Mark this appointment as completed?')) {
+      return;
+    }
+
+    setCompletingId(appointmentId);
+    try {
+      await completeAppointment(appointmentId);
+      // Reload appointments after completion
+      await loadAppointments();
+      // Notify parent to refresh other components
+      onAppointmentChange?.();
+    } catch (err) {
+      setError('Failed to complete appointment');
+      console.error('Complete error:', err);
+    } finally {
+      setCompletingId(null);
     }
   };
 
@@ -235,13 +264,27 @@ export default function Appointments({ userId, userRole }: AppointmentsProps) {
                             <span className="time-icon">🕐</span>
                             {appointmentDate ? appointmentDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : 'Time TBD'}
                           </p>
-                          <button 
-                            className="btn-cancel-appointment"
-                            onClick={() => handleCancelAppointment(appointment.id)}
-                            disabled={cancellingId === appointment.id}
-                          >
-                            {cancellingId === appointment.id ? 'Cancelling...' : 'Cancel Appointment'}
-                          </button>
+                          {(appointment.status === 1 || !appointment.status) && (
+                            <div className="appointment-actions">
+                              <button 
+                                className="btn-complete-appointment"
+                                onClick={() => handleCompleteAppointment(appointment.id)}
+                                disabled={completingId === appointment.id}
+                              >
+                                {completingId === appointment.id ? 'Completing...' : 'Mark as Complete'}
+                              </button>
+                              <button 
+                                className="btn-cancel-appointment"
+                                onClick={() => handleCancelAppointment(appointment.id)}
+                                disabled={cancellingId === appointment.id}
+                              >
+                                {cancellingId === appointment.id ? 'Cancelling...' : 'Cancel'}
+                              </button>
+                            </div>
+                          )}
+                          {appointment.status === 2 && (
+                            <div className="status-badge completed-badge">✓ Completed</div>
+                          )}
                         </div>
                       </div>
                     );

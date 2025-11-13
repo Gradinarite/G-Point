@@ -10,6 +10,7 @@ import Appointments from './Appointments';
 import BookingModal from './BookingModal';
 import CreateServiceModal from './CreateServiceModal';
 import EditServiceModal from './EditServiceModal';
+import Statistics from './Statistics';
 import './Home.css';
 
 interface HomeProps {
@@ -33,6 +34,7 @@ export default function Home({ userName, user, onLogout, onUserUpdate }: HomePro
   const [services, setServices] = useState<Service[]>([]);
   const [specialists, setSpecialists] = useState<Map<string, User>>(new Map());
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const isSpecialist = user.role === UserRoles.Specialist;
 
@@ -97,6 +99,36 @@ export default function Home({ userName, user, onLogout, onUserUpdate }: HomePro
     setRefreshAppointments(prev => prev + 1);
   };
 
+  const filterServices = (servicesToFilter: Service[]) => {
+    if (!searchQuery.trim()) {
+      return servicesToFilter;
+    }
+
+    const query = searchQuery.toLowerCase();
+
+    return servicesToFilter.filter(service => {
+      // Search by service name
+      if (service.name.toLowerCase().includes(query)) {
+        return true;
+      }
+
+      // Search by service description
+      if (service.description?.toLowerCase().includes(query)) {
+        return true;
+      }
+
+      // For regular users, also search by specialist name
+      if (!isSpecialist) {
+        const specialist = specialists.get(service.specialistId);
+        if (specialist?.fullName.toLowerCase().includes(query)) {
+          return true;
+        }
+      }
+
+      return false;
+    });
+  };
+
   return (
     <div className="home-container">
       {/* Sidebar */}
@@ -127,13 +159,15 @@ export default function Home({ userName, user, onLogout, onUserUpdate }: HomePro
           >
             <span className="nav-icon">⚙️</span>
           </button>
-          <button 
-            className={`nav-item ${activeTab === 'stats' ? 'active' : ''}`}
-            onClick={() => setActiveTab('stats')}
-            title="Statistics"
-          >
-            <span className="nav-icon">📊</span>
-          </button>
+          {isSpecialist && (
+            <button 
+              className={`nav-item ${activeTab === 'stats' ? 'active' : ''}`}
+              onClick={() => setActiveTab('stats')}
+              title="Statistics"
+            >
+              <span className="nav-icon">📊</span>
+            </button>
+          )}
         </nav>
 
         <div className="sidebar-footer">
@@ -152,7 +186,12 @@ export default function Home({ userName, user, onLogout, onUserUpdate }: HomePro
           </div>
           <div className="header-right">
             <div className="search-bar">
-              <input type="text" placeholder="Search services..." />
+              <input 
+                type="text" 
+                placeholder={isSpecialist ? "Search my services..." : "Search services or specialists..."}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
               <button className="search-btn">🔍</button>
             </div>
             <button className="user-menu" onClick={() => setShowProfile(true)}>
@@ -179,27 +218,34 @@ export default function Home({ userName, user, onLogout, onUserUpdate }: HomePro
                 <div className="services-grid">
                   {loading ? (
                     <p>Loading services...</p>
-                  ) : services.filter(s => s.specialistId === user.id).length === 0 ? (
-                    <p>No services created yet. Click "Create Service" to add one.</p>
-                  ) : (
-                    services
-                      .filter(s => s.specialistId === user.id)
-                      .map((service) => (
-                        <div key={service.serviceId} className="service-card">
-                          <div className="card-content">
-                            <h3>{service.name}</h3>
-                            <p>{service.description || 'No description available'}</p>
-                            <span className="service-duration">{service.durationInMinutes} min</span>
-                            <button 
-                              className="btn-edit-service"
-                              onClick={() => handleEditService(service)}
-                            >
-                              Edit Service
-                            </button>
-                          </div>
+                  ) : (() => {
+                    const myServices = services.filter(s => s.specialistId === user.id);
+                    const filteredServices = filterServices(myServices);
+                    
+                    if (myServices.length === 0) {
+                      return <p>No services created yet. Click "Create Service" to add one.</p>;
+                    }
+                    
+                    if (filteredServices.length === 0) {
+                      return <p>No services match your search.</p>;
+                    }
+                    
+                    return filteredServices.map((service) => (
+                      <div key={service.serviceId} className="service-card">
+                        <div className="card-content">
+                          <h3>{service.name}</h3>
+                          <p>{service.description || 'No description available'}</p>
+                          <span className="service-duration">{service.durationInMinutes} min</span>
+                          <button 
+                            className="btn-edit-service"
+                            onClick={() => handleEditService(service)}
+                          >
+                            Edit Service
+                          </button>
                         </div>
-                      ))
-                  )}
+                      </div>
+                    ));
+                  })()}
                 </div>
               </section>
             ) : (
@@ -222,10 +268,18 @@ export default function Home({ userName, user, onLogout, onUserUpdate }: HomePro
                   <div className="services-grid">
                     {loading ? (
                       <p>Loading services...</p>
-                    ) : services.length === 0 ? (
-                      <p>No services available</p>
-                    ) : (
-                      services.map((service) => {
+                    ) : (() => {
+                      const filteredServices = filterServices(services);
+                      
+                      if (services.length === 0) {
+                        return <p>No services available</p>;
+                      }
+                      
+                      if (filteredServices.length === 0) {
+                        return <p>No services match your search.</p>;
+                      }
+                      
+                      return filteredServices.map((service) => {
                         const specialist = specialists.get(service.specialistId);
                         return (
                           <div key={service.serviceId} className="service-card">
@@ -252,8 +306,8 @@ export default function Home({ userName, user, onLogout, onUserUpdate }: HomePro
                             </div>
                           </div>
                         );
-                      })
-                    )}
+                      });
+                    })()}
                   </div>
                 )}
               </section>
@@ -262,7 +316,12 @@ export default function Home({ userName, user, onLogout, onUserUpdate }: HomePro
         )}
 
         {activeTab === 'appointments' && (
-          <Appointments userId={user.id} userRole={user.role} key={refreshAppointments} />
+          <Appointments 
+            userId={user.id} 
+            userRole={user.role} 
+            key={refreshAppointments}
+            onAppointmentChange={() => setRefreshAppointments(prev => prev + 1)}
+          />
         )}
 
         {activeTab === 'settings' && (
@@ -270,10 +329,7 @@ export default function Home({ userName, user, onLogout, onUserUpdate }: HomePro
         )}
 
         {activeTab === 'stats' && (
-          <div className="placeholder-content">
-            <h1>Statistics</h1>
-            <p>Your statistics will appear here</p>
-          </div>
+          <Statistics userId={user.id} key={refreshAppointments} />
         )}
       </main>
 

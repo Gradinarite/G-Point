@@ -36,7 +36,8 @@ public class AppointmentService : IAppointmentService
             UserId = appointment.UserId,
             SpecialistId = appointment.SpecialistId,
             ServiceId = appointment.ServiceId,
-            SlotId = appointment.SlotId
+            SlotId = appointment.SlotId,
+            Status = appointment.Status
         };
     }
 
@@ -49,7 +50,8 @@ public class AppointmentService : IAppointmentService
                 UserId = a.UserId,
                 SpecialistId = a.SpecialistId,
                 ServiceId = a.ServiceId,
-                SlotId = a.SlotId
+                SlotId = a.SlotId,
+                Status = a.Status
             })
             .ToListAsync();
     }
@@ -65,7 +67,8 @@ public class AppointmentService : IAppointmentService
                 UserId = a.UserId,
                 SpecialistId = a.SpecialistId,
                 ServiceId = a.ServiceId,
-                SlotId = a.SlotId
+                SlotId = a.SlotId,
+                Status = a.Status
             })
             .ToListAsync();
     }
@@ -81,15 +84,19 @@ public class AppointmentService : IAppointmentService
                 UserId = a.UserId,
                 SpecialistId = a.SpecialistId,
                 ServiceId = a.ServiceId,
-                SlotId = a.SlotId
+                SlotId = a.SlotId,
+                Status = a.Status
             })
             .ToListAsync();
     }
 
     public async Task<AppointmentDto> CreateAsync(CreateAppointmentDto appointmentDto)
     {
-        // Check if the slot is already booked
-        var slot = await _context.Slots.FindAsync(appointmentDto.SlotId);
+        // Check if the slot is already booked - reload from database to avoid cached data
+        var slot = await _context.Slots
+            .AsNoTracking()
+            .FirstOrDefaultAsync(s => s.Id == appointmentDto.SlotId);
+            
         if (slot == null)
         {
             throw new InvalidOperationException("Slot not found");
@@ -98,6 +105,13 @@ public class AppointmentService : IAppointmentService
         if (slot.IsBooked)
         {
             throw new InvalidOperationException("This time slot is already booked");
+        }
+
+        // Now get the tracked entity to update it
+        var slotToUpdate = await _context.Slots.FindAsync(appointmentDto.SlotId);
+        if (slotToUpdate == null)
+        {
+            throw new InvalidOperationException("Slot not found");
         }
 
         var appointment = new Appointment
@@ -110,7 +124,7 @@ public class AppointmentService : IAppointmentService
         };
 
         // Mark the slot as booked
-        slot.IsBooked = true;
+        slotToUpdate.IsBooked = true;
 
         _context.Appointments.Add(appointment);
         await _context.SaveChangesAsync();
@@ -121,7 +135,8 @@ public class AppointmentService : IAppointmentService
             UserId = appointment.UserId,
             SpecialistId = appointment.SpecialistId,
             ServiceId = appointment.ServiceId,
-            SlotId = appointment.SlotId
+            SlotId = appointment.SlotId,
+            Status = appointment.Status
         };
     }
 
@@ -146,7 +161,8 @@ public class AppointmentService : IAppointmentService
             UserId = appointment.UserId,
             SpecialistId = appointment.SpecialistId,
             ServiceId = appointment.ServiceId,
-            SlotId = appointment.SlotId
+            SlotId = appointment.SlotId,
+            Status = appointment.Status
         };
     }
 
@@ -172,16 +188,38 @@ public class AppointmentService : IAppointmentService
 
     public async Task<bool> CancelAppointmentAsync(Guid id)
     {
-        var appointment = await GetByIdAsync(id);
+        var appointment = await _context.Appointments.FindAsync(id);
         if (appointment is null)
         {
             return false;
         }
 
-        var slotReleased = await _slotService.ReleaseSlotAsync(appointment.SlotId);
+        // Release the slot so it can be booked again
+        await _slotService.ReleaseSlotAsync(appointment.SlotId);
 
-        var entity = await _context.Appointments.FindAsync(id);
-        _context.Appointments.Remove(entity!);
+        // Set status to cancelled instead of deleting
+        appointment.Status = 3; // 3 = Cancelled
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> CompleteAppointmentAsync(Guid id)
+    {
+        var appointment = await _context.Appointments.FindAsync(id);
+        if (appointment is null)
+        {
+            return false;
+        }
+
+        // Get the slot and release it
+        var slot = await _context.Slots.FindAsync(appointment.SlotId);
+        if (slot != null)
+        {
+            slot.IsBooked = false;
+            _context.Entry(slot).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+        }
+
+        appointment.Status = 2; // 2 = Completed
         await _context.SaveChangesAsync();
         return true;
     }

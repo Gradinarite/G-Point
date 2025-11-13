@@ -9286,11 +9286,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\stili\\WebstormProjects\\G-Point\\GPoint\\GPoint.api\\GPoint.API.csproj",
+      "projectUniqueName": "C:\\Users\\stili\\WebstormProjects\\G-Point\\GPoint\\GPoint.API\\GPoint.API.csproj",
       "projectName": "GPoint.API",
-      "projectPath": "C:\\Users\\stili\\WebstormProjects\\G-Point\\GPoint\\GPoint.api\\GPoint.API.csproj",
+      "projectPath": "C:\\Users\\stili\\WebstormProjects\\G-Point\\GPoint\\GPoint.API\\GPoint.API.csproj",
       "packagesPath": "C:\\Users\\stili\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\stili\\WebstormProjects\\G-Point\\GPoint\\GPoint.api\\obj\\",
+      "outputPath": "C:\\Users\\stili\\WebstormProjects\\G-Point\\GPoint\\GPoint.API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\stili\\AppData\\Roaming\\NuGet\\NuGet.Config"

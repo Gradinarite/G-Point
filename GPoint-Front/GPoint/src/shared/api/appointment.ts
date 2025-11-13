@@ -99,3 +99,13 @@ export async function cancelAppointment(id: string): Promise<void> {
         throw new Error(`Failed to cancel appointment. Status: ${response.status}`);
     }
 }
+
+export async function completeAppointment(id: string): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/CompleteAppointment/${id}`, {
+        method: 'PATCH',
+    });
+
+    if (!response.ok) {
+        throw new Error(`Failed to complete appointment. Status: ${response.status}`);
+    }
+}

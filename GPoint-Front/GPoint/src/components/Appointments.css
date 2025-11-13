@@ -336,3 +336,52 @@
 .dark-mode .specialist-card .appointment-body h3 {
   color: #8b9bff;
 }
+
+.appointment-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.btn-complete-appointment {
+  flex: 1;
+  padding: 10px 16px;
+  background: #4ade80;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-complete-appointment:hover {
+  background: #22c55e;
+  transform: translateY(-2px);
+}
+
+.btn-complete-appointment:disabled,
+.btn-cancel-appointment:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.status-badge {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 16px;
+}
+
+.completed-badge {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.dark-mode .completed-badge {
+  background: #064e3b;
+  color: #6ee7b7;
+}
