@@ -1,13 +1,10 @@
 name: Generate Wiki Documentation
 
+# Trigger workflow on pushes to main/master or manually
 on:
   push:
     branches: [main, master]
-    paths: 
-      - 'README.md'
-      - 'docs/**'
-      - 'src/**'
-      - '*.md'
+    paths: ['README.md', 'docs/**', 'src/**', '*.md']
   workflow_dispatch:
 
 permissions:
@@ -19,94 +16,38 @@ jobs:
   generate-wiki:
     runs-on: ubuntu-latest
     steps:
+      # 1️⃣ Checkout the repository
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # 2️⃣ Setup Python
       - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
+      # 3️⃣ Install git-wiki-builder
       - run: pip install git-wiki-builder
 
+      # 4️⃣ Clone the wiki repository
       - name: Clone wiki repo
-        run: git clone https://$WIKI_ACTION_TOKEN@github.com/${{ github.repository }}.wiki.git wiki
-        env:
-          WIKI_ACTION_TOKEN: ${{ secrets.WIKI_ACTION_TOKEN }}
+        run: git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git wiki
 
+      # 5️⃣ Build wiki content using GitHub AI
       - name: Build wiki content
         run: |
           cd wiki
-          git-wiki-builder --provider openai
+          git-wiki-builder --ai-provider github
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.WIKI_ACTION_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
 
+      # 6️⃣ Commit & push changes
       - name: Push changes to wiki
         run: |
           cd wiki
           git add .
-          git commit -m "Update wiki via GitHub Action" || echo "No changes to commit"
-          git remote set-url origin https://$WIKI_ACTION_TOKEN@github.com/${{ github.repository }}.wiki.git
+          git commit -m "Update wiki via GitHub AI" || echo "No changes to commit"
           git push
         env:
-          WIKI_ACTION_TOKEN: ${{ secrets.WIKI_ACTION_TOKEN }}
-
-
-
-
-# name: Generate Wiki Documentation
-
-# on:
-#   push:
-#     branches: [main, master]
-#     paths: ['README.md', 'docs/**', 'src/**', '*.md']
-#   workflow_dispatch:
-
-# permissions:
-#   contents: write
-#   pages: write
-#   id-token: write
-
-# jobs:
-#   generate-wiki:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - uses: actions/checkout@v4
-#         with:
-#           fetch-depth: 0
-
-#       - uses: actions/setup-python@v4
-#         with:
-#           python-version: '3.11'
-
-#       - run: pip install git-wiki-builder
-
-#       # Clone the wiki repo using PAT
-#       - name: Clone wiki repo
-#         run: |
-#           git clone https://${{ secrets.WIKI_ACTION_TOKEN }}@github.com/${{ github.repository }}.wiki.git wiki
-#         env:
-#           WIKI_ACTION_TOKEN: ${{ secrets.WIKI_ACTION_TOKEN }}
-
-#       # Run git-wiki-builder (OpenAI API key is passed here)
-#       - name: Build wiki content
-#         run: |
-#           cd wiki
-#           git-wiki-builder
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.WIKI_ACTION_TOKEN }}
-#           GITHUB_REPOSITORY: ${{ github.repository }}
-#           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-
-#       # Push changes to the wiki repo
-#       - name: Push changes to wiki
-#         run: |
-#           cd wiki
-#           git add .
-#           git commit -m "Update wiki via GitHub Action" || echo "No changes to commit"
-#           git push
-#         env:
-#           WIKI_ACTION_TOKEN: ${{ secrets.WIKI_ACTION_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
