@@ -37,11 +37,11 @@ jobs:
       - name: Build wiki content
         run: |
           cd wiki
-          git-wiki-builder
+          git-wiki-builder --provider openai
         env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.WIKI_ACTION_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Push changes to wiki
         run: |
