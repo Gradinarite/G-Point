@@ -1,83 +1,148 @@
-# git-wiki-builder.yml
-# FINAL VERSION — includes:
-# - Markdown → Wiki formatting rules
-# - Auto per-folder category pages
-# - OpenAI integration
-# - File-to-wiki mapping
+name: Generate Wiki Documentation
 
-source:
-  paths:
-    - README.md
-    - docs
-    - src
+on:
+  push:
+    branches: [main, master]
+    paths: ['README.md', 'docs/**', 'src/**', '*.md']
+  workflow_dispatch:
 
-output:
-  path: wiki
-  clean: true
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
-openai:
-  enabled: true
-  api_key_env: OPENAI_API_KEY
-  model: gpt-4.1
-  temperature: 0.2
-  timeout: 60
+jobs:
+  generate-wiki:
+    runs-on: ubuntu-latest
 
-# --- Markdown → Wiki formatting rules ---
-formatting:
-  normalize_headings: true      # Fixes inconsistent heading levels
-  convert_html: true            # Converts <div>, <span>, <code> blocks to markdown
-  code_block_style: "fenced"    # Ensures triple-backtick code blocks
-  list_style: "consistent"      # Fixes bullet formatting
-  table_style: "simple"         # Simplifies Markdown tables
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-templates:
-  enabled: true
-  default:
-    filename: "{{ file_stem }}.md"
-    prompt: |
-      Convert the following Markdown file into **clean, consistent Wiki documentation**.
-      Apply these rules:
-      - Use clear headings (H1 → page title, H2/H3 for sections)
-      - Convert HTML to Markdown when possible
-      - Rewrite for clarity and structure
-      - Add examples and explanation where helpful
-      - Maintain code blocks with fenced ``` syntax
-      - Correct inconsistent spacing or indentation
-      - Resolve broken links or anchors
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
 
-      File path: {{ file_path }}
+      - run: pip install git-wiki-builder
 
-      Content:
-      {{ file_content }}
+      # Clone the wiki repo using PAT
+      - name: Clone wiki repo
+        run: |
+          git clone https://${{ secrets.WIKI_ACTION_TOKEN }}@github.com/${{ github.repository }}.wiki.git wiki
+        env:
+          WIKI_ACTION_TOKEN: ${{ secrets.WIKI_ACTION_TOKEN }}
 
-# --- Automatic per-folder categories ---
-categories:
-  enabled: true
-  folders:
-    docs: "Documentation"
-    src: "Source Reference"
-  prompt: |
-    Create a category page summarizing the contents of this folder.
-    Include:
-      - A title
-      - A short explanation of the folder's purpose
-      - A list of subpages with brief descriptions
+      # Run git-wiki-builder (OpenAI API key is passed here)
+      - name: Build wiki content
+        run: |
+          cd wiki
+          git-wiki-builder
+        env:
+          GITHUB_TOKEN: ${{ secrets.WIKI_ACTION_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
-index:
-  enabled: true
-  title: "Project Wiki Home"
-  filename: "Home.md"
-  prompt: |
-    Generate the main wiki home page.
-    Include:
-      - Description of the project
-      - High-level overview of documentation areas
-      - Links to top-level categories
-      - Any important usage notes
+      # Push changes to the wiki repo
+      - name: Push changes to wiki
+        run: |
+          cd wiki
+          git add .
+          git commit -m "Update wiki via GitHub Action" || echo "No changes to commit"
+          git push
+        env:
+          WIKI_ACTION_TOKEN: ${{ secrets.WIKI_ACTION_TOKEN }}
 
-ignore:
-  - .git
-  - .github
-  - wiki
-  - venv
-  - node_modules
+
+
+
+
+
+
+
+
+
+
+# # git-wiki-builder.yml
+# # FINAL VERSION — includes:
+# # - Markdown → Wiki formatting rules
+# # - Auto per-folder category pages
+# # - OpenAI integration
+# # - File-to-wiki mapping
+
+# source:
+#   paths:
+#     - README.md
+#     - docs
+#     - src
+
+# output:
+#   path: wiki
+#   clean: true
+
+# openai:
+#   enabled: true
+#   api_key_env: OPENAI_API_KEY
+#   model: gpt-4.1
+#   temperature: 0.2
+#   timeout: 60
+
+# # --- Markdown → Wiki formatting rules ---
+# formatting:
+#   normalize_headings: true      # Fixes inconsistent heading levels
+#   convert_html: true            # Converts <div>, <span>, <code> blocks to markdown
+#   code_block_style: "fenced"    # Ensures triple-backtick code blocks
+#   list_style: "consistent"      # Fixes bullet formatting
+#   table_style: "simple"         # Simplifies Markdown tables
+
+# templates:
+#   enabled: true
+#   default:
+#     filename: "{{ file_stem }}.md"
+#     prompt: |
+#       Convert the following Markdown file into **clean, consistent Wiki documentation**.
+#       Apply these rules:
+#       - Use clear headings (H1 → page title, H2/H3 for sections)
+#       - Convert HTML to Markdown when possible
+#       - Rewrite for clarity and structure
+#       - Add examples and explanation where helpful
+#       - Maintain code blocks with fenced ``` syntax
+#       - Correct inconsistent spacing or indentation
+#       - Resolve broken links or anchors
+
+#       File path: {{ file_path }}
+
+#       Content:
+#       {{ file_content }}
+
+# # --- Automatic per-folder categories ---
+# categories:
+#   enabled: true
+#   folders:
+#     docs: "Documentation"
+#     src: "Source Reference"
+#   prompt: |
+#     Create a category page summarizing the contents of this folder.
+#     Include:
+#       - A title
+#       - A short explanation of the folder's purpose
+#       - A list of subpages with brief descriptions
+
+# index:
+#   enabled: true
+#   title: "Project Wiki Home"
+#   filename: "Home.md"
+#   prompt: |
+#     Generate the main wiki home page.
+#     Include:
+#       - Description of the project
+#       - High-level overview of documentation areas
+#       - Links to top-level categories
+#       - Any important usage notes
+
+# ignore:
+#   - .git
+#   - .github
+#   - wiki
+#   - venv
+#   - node_modules
