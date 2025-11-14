@@ -1,0 +1,83 @@
+# git-wiki-builder.yml
+# FINAL VERSION — includes:
+# - Markdown → Wiki formatting rules
+# - Auto per-folder category pages
+# - OpenAI integration
+# - File-to-wiki mapping
+
+source:
+  paths:
+    - README.md
+    - docs
+    - src
+
+output:
+  path: wiki
+  clean: true
+
+openai:
+  enabled: true
+  api_key_env: OPENAI_API_KEY
+  model: gpt-4.1
+  temperature: 0.2
+  timeout: 60
+
+# --- Markdown → Wiki formatting rules ---
+formatting:
+  normalize_headings: true      # Fixes inconsistent heading levels
+  convert_html: true            # Converts <div>, <span>, <code> blocks to markdown
+  code_block_style: "fenced"    # Ensures triple-backtick code blocks
+  list_style: "consistent"      # Fixes bullet formatting
+  table_style: "simple"         # Simplifies Markdown tables
+
+templates:
+  enabled: true
+  default:
+    filename: "{{ file_stem }}.md"
+    prompt: |
+      Convert the following Markdown file into **clean, consistent Wiki documentation**.
+      Apply these rules:
+      - Use clear headings (H1 → page title, H2/H3 for sections)
+      - Convert HTML to Markdown when possible
+      - Rewrite for clarity and structure
+      - Add examples and explanation where helpful
+      - Maintain code blocks with fenced ``` syntax
+      - Correct inconsistent spacing or indentation
+      - Resolve broken links or anchors
+
+      File path: {{ file_path }}
+
+      Content:
+      {{ file_content }}
+
+# --- Automatic per-folder categories ---
+categories:
+  enabled: true
+  folders:
+    docs: "Documentation"
+    src: "Source Reference"
+  prompt: |
+    Create a category page summarizing the contents of this folder.
+    Include:
+      - A title
+      - A short explanation of the folder's purpose
+      - A list of subpages with brief descriptions
+
+index:
+  enabled: true
+  title: "Project Wiki Home"
+  filename: "Home.md"
+  prompt: |
+    Generate the main wiki home page.
+    Include:
+      - Description of the project
+      - High-level overview of documentation areas
+      - Links to top-level categories
+      - Any important usage notes
+
+ignore:
+  - .git
+  - .github
+  - wiki
+  - venv
+  - node_modules
