@@ -5,7 +5,6 @@
 		<img src="https://img.shields.io/badge/React-18.x-61dafb" alt="React" />
 		<img src="https://img.shields.io/badge/TypeScript-5.x-3178c6" alt="TypeScript" />
 		<img src="https://img.shields.io/badge/Entity%20Framework%20Core-8.x-68217a" alt="EF Core" />
-		<img src="https://img.shields.io/badge/License-MIT-green" alt="License" />
 	</p>
 </div>
 
