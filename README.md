@@ -186,5 +186,3 @@ GPoint/
 
 ## Contact
 For questions or support, contact the repository owner or open an issue.
-
-test12
