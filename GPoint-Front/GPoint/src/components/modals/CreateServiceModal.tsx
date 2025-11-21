@@ -84,8 +84,8 @@ export default function CreateServiceModal({ specialistId, onClose, onServiceCre
         const slotData: CreateSlot = {
           serviceId: createdService.serviceId,
           specialistId,
-          startTime: new Date(`${slot.date}T${slot.startTime}`).toISOString(),
-          endTime: new Date(`${slot.date}T${slot.endTime}`).toISOString()
+          startTime: `${slot.date}T${slot.startTime}:00`,
+          endTime: `${slot.date}T${slot.endTime}:00`
         };
         await createSlot(slotData);
       }
@@ -93,7 +93,8 @@ export default function CreateServiceModal({ specialistId, onClose, onServiceCre
       onServiceCreated();
       onClose();
     } catch (err) {
-      setError('Failed to create service. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Unable to create service. Please try again.';
+      setError(errorMessage);
       console.error('Create service error:', err);
     } finally {
       setLoading(false);

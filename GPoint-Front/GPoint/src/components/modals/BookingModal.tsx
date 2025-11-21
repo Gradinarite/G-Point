@@ -81,11 +81,11 @@ export default function BookingModal({ service, userId, onClose, onBookingSucces
       onBookingSuccess();
       onClose();
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to book appointment';
+      const errorMessage = err instanceof Error ? err.message : 'Unable to book appointment. Please try again.';
+      setError(errorMessage);
       
-      if (errorMessage.includes('500')) {
-        setError('This time slot may have just been booked by someone else. Please select a different time.');
-        // Reload slots to get updated availability
+      // Reload slots to get updated availability if it was a conflict
+      if (errorMessage.toLowerCase().includes('no longer available') || errorMessage.toLowerCase().includes('conflict')) {
         try {
           const slots = await fetchSlotsByServiceId(service.serviceId);
           const selectedDateObj = new Date(selectedDate);

@@ -1,4 +1,5 @@
 import type { Appointment, CreateAppointment, UpdateAppointment } from "../types/appointment";
+import { getContextualErrorMessage } from "../utils/errorHandler";
 
 const API_BASE_URL = "http://localhost:5141/api/Appointment";
 
@@ -6,7 +7,7 @@ export async function fetchAppointment(id: string): Promise<Appointment> {
     const response = await fetch(`${API_BASE_URL}/GetAppointmentById/${id}`);
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch appointment data. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'fetch', resource: 'Appointment' }));
     }
 
     const appointmentData = await response.json();
@@ -17,7 +18,7 @@ export async function fetchAllAppointments(): Promise<Appointment[]> {
     const response = await fetch(`${API_BASE_URL}/GetAllAppointments`);
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch all appointments. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'fetch', resource: 'Appointments' }));
     }
 
     const appointments = await response.json();
@@ -28,7 +29,7 @@ export async function fetchAppointmentsByUserId(userId: string): Promise<Appoint
     const response = await fetch(`${API_BASE_URL}/GetAppointmentsByUserId/${userId}`);
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch appointments by user ID. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'fetch', resource: 'Appointments' }));
     }
 
     const appointments = await response.json();
@@ -39,7 +40,7 @@ export async function fetchAppointmentsBySpecialistId(specialistId: string): Pro
     const response = await fetch(`${API_BASE_URL}/GetAppointmentsBySpecialistId/${specialistId}`);
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch appointments by specialist ID. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'fetch', resource: 'Appointments' }));
     }
 
     const appointments = await response.json();
@@ -56,7 +57,7 @@ export async function createAppointment(appointmentData: CreateAppointment): Pro
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to create appointment. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'book', resource: 'Appointment' }));
     }
 
     const createdAppointment = await response.json();
@@ -73,7 +74,7 @@ export async function updateAppointment(appointmentData: UpdateAppointment): Pro
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to update appointment. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'update', resource: 'Appointment' }));
     }
 
     const updatedAppointment = await response.json();
@@ -86,7 +87,7 @@ export async function deleteAppointment(id: string): Promise<void> {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to delete appointment. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'delete', resource: 'Appointment' }));
     }
 }
 
@@ -96,7 +97,7 @@ export async function cancelAppointment(id: string): Promise<void> {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to cancel appointment. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'cancel', resource: 'Appointment' }));
     }
 }
 
@@ -106,6 +107,6 @@ export async function completeAppointment(id: string): Promise<void> {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to complete appointment. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'update', resource: 'Appointment' }));
     }
 }

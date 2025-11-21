@@ -120,7 +120,8 @@ export default function Appointments({ userId, userRole, onAppointmentChange }: 
         setServiceGroups(grouped);
       }
     } catch (err) {
-      setError('Failed to load appointments');
+      const errorMessage = err instanceof Error ? err.message : 'Unable to load appointments. Please try again.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -139,7 +140,8 @@ export default function Appointments({ userId, userRole, onAppointmentChange }: 
       // Notify parent to refresh other components
       onAppointmentChange?.();
     } catch (err) {
-      setError('Failed to cancel appointment');
+      const errorMessage = err instanceof Error ? err.message : 'Unable to cancel appointment. Please try again.';
+      setError(errorMessage);
       console.error('Cancel error:', err);
     } finally {
       setCancellingId(null);
@@ -159,7 +161,8 @@ export default function Appointments({ userId, userRole, onAppointmentChange }: 
       // Notify parent to refresh other components
       onAppointmentChange?.();
     } catch (err) {
-      setError('Failed to complete appointment');
+      const errorMessage = err instanceof Error ? err.message : 'Unable to complete appointment. Please try again.';
+      setError(errorMessage);
       console.error('Complete error:', err);
     } finally {
       setCompletingId(null);

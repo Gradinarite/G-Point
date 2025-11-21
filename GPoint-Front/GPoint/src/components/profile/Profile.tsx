@@ -35,7 +35,8 @@ export default function Profile({ user, onUserUpdate, onClose }: ProfileProps) {
       
       setTimeout(() => setMessage(''), 3000);
     } catch (err) {
-      setError('Failed to update profile. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Unable to update profile. Please try again.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

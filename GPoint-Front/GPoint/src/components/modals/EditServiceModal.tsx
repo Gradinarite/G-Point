@@ -77,7 +77,8 @@ export default function EditServiceModal({ service, specialistId, onClose, onSer
       await deleteSlot(slotId);
       setExistingSlots(existingSlots.filter(s => s.id !== slotId));
     } catch (err) {
-      setError('Failed to delete slot. It may be booked.');
+      const errorMessage = err instanceof Error ? err.message : 'Unable to delete time slot.';
+      setError(errorMessage);
       console.error('Delete slot error:', err);
     }
   };
@@ -109,8 +110,8 @@ export default function EditServiceModal({ service, specialistId, onClose, onSer
         const slotData: CreateSlot = {
           serviceId: service.serviceId,
           specialistId,
-          startTime: new Date(`${slot.date}T${slot.startTime}`).toISOString(),
-          endTime: new Date(`${slot.date}T${slot.endTime}`).toISOString()
+          startTime: `${slot.date}T${slot.startTime}:00`,
+          endTime: `${slot.date}T${slot.endTime}:00`
         };
         await createSlot(slotData);
       }
@@ -118,7 +119,8 @@ export default function EditServiceModal({ service, specialistId, onClose, onSer
       onServiceUpdated();
       onClose();
     } catch (err) {
-      setError('Failed to update service. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Unable to update service. Please try again.';
+      setError(errorMessage);
       console.error('Update service error:', err);
     } finally {
       setLoading(false);
@@ -134,7 +136,8 @@ export default function EditServiceModal({ service, specialistId, onClose, onSer
       onServiceUpdated();
       onClose();
     } catch (err) {
-      setError('Failed to delete service. It may have booked appointments.');
+      const errorMessage = err instanceof Error ? err.message : 'Unable to delete service.';
+      setError(errorMessage);
       console.error('Delete service error:', err);
       setLoading(false);
     }

@@ -1,4 +1,5 @@
 import type { CreateUser, UpdateUser, User } from "../types/user";
+import { getContextualErrorMessage } from "../utils/errorHandler";
 
 const API_BASE_URL = "http://localhost:5141/api/User";
 
@@ -6,7 +7,7 @@ export async function fetchUser(id: string): Promise<User> {
     const response = await fetch(`${API_BASE_URL}/GetUserById/${id}`);
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch user data. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'fetch', resource: 'User' }));
     }
 
     const userData = await response.json();
@@ -17,7 +18,7 @@ export async function fetchUserByEmail(email: string): Promise<User> {
     const response = await fetch(`${API_BASE_URL}/GetUserByEmail?email=${encodeURIComponent(email)}`);
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch user by email. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'fetch', resource: 'User' }));
     }
 
     const userData = await response.json();
@@ -28,7 +29,7 @@ export async function fetchAllUsers(): Promise<User[]> {
     const response = await fetch(`${API_BASE_URL}/GetAllUsers`);
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch all users. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'fetch', resource: 'Users' }));
     }
 
     const users = await response.json();
@@ -39,7 +40,7 @@ export async function fetchSpecialists(): Promise<User[]> {
     const response = await fetch(`${API_BASE_URL}/GetSpecialists`);
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch specialists. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'fetch', resource: 'Specialists' }));
     }
 
     const specialists = await response.json();
@@ -56,7 +57,7 @@ export async function createUser(userData: CreateUser): Promise<User> {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to create user. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'create', resource: 'User' }));
     }
 
     const createdUser = await response.json();
@@ -73,7 +74,7 @@ export async function updateUser(id: string, userData: UpdateUser): Promise<User
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to update user. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'update', resource: 'Profile' }));
     }
 
     const updatedUser = await response.json();
@@ -86,6 +87,6 @@ export async function deleteUser(id: string): Promise<void> {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to delete user. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'delete', resource: 'User' }));
     }
 }

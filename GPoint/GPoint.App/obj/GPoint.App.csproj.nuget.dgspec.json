@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\atpopov21\\source\\repos\\G-Point\\GPoint\\GPoint.App\\GPoint.App.csproj": {}
+    "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.App\\GPoint.App.csproj": {}
   },
   "projects": {
-    "C:\\Users\\atpopov21\\source\\repos\\G-Point\\GPoint\\GPoint.App\\GPoint.App.csproj": {
+    "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.App\\GPoint.App.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\atpopov21\\source\\repos\\G-Point\\GPoint\\GPoint.App\\GPoint.App.csproj",
+        "projectUniqueName": "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.App\\GPoint.App.csproj",
         "projectName": "GPoint.App",
-        "projectPath": "C:\\Users\\atpopov21\\source\\repos\\G-Point\\GPoint\\GPoint.App\\GPoint.App.csproj",
-        "packagesPath": "C:\\Users\\atpopov21\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\atpopov21\\source\\repos\\G-Point\\GPoint\\GPoint.App\\obj\\",
+        "projectPath": "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.App\\GPoint.App.csproj",
+        "packagesPath": "C:\\Users\\stili\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.App\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\atpopov21\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\stili\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -26,8 +26,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\atpopov21\\source\\repos\\G-Point\\GPoint\\GPoint.DataAccess\\GPoint.DataAccess.csproj": {
-                "projectPath": "C:\\Users\\atpopov21\\source\\repos\\G-Point\\GPoint\\GPoint.DataAccess\\GPoint.DataAccess.csproj"
+              "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.DataAccess\\GPoint.DataAccess.csproj": {
+                "projectPath": "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.DataAccess\\GPoint.DataAccess.csproj"
               }
             }
           }
@@ -42,7 +42,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net9.0": {
@@ -87,21 +87,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.307/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\atpopov21\\source\\repos\\G-Point\\GPoint\\GPoint.DataAccess\\GPoint.DataAccess.csproj": {
+    "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.DataAccess\\GPoint.DataAccess.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\atpopov21\\source\\repos\\G-Point\\GPoint\\GPoint.DataAccess\\GPoint.DataAccess.csproj",
+        "projectUniqueName": "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.DataAccess\\GPoint.DataAccess.csproj",
         "projectName": "GPoint.DataAccess",
-        "projectPath": "C:\\Users\\atpopov21\\source\\repos\\G-Point\\GPoint\\GPoint.DataAccess\\GPoint.DataAccess.csproj",
-        "packagesPath": "C:\\Users\\atpopov21\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\atpopov21\\source\\repos\\G-Point\\GPoint\\GPoint.DataAccess\\obj\\",
+        "projectPath": "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.DataAccess\\GPoint.DataAccess.csproj",
+        "packagesPath": "C:\\Users\\stili\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.DataAccess\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\atpopov21\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\stili\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -113,8 +113,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\atpopov21\\source\\repos\\G-Point\\GPoint\\GPoint.Domain\\GPoint.Domain.csproj": {
-                "projectPath": "C:\\Users\\atpopov21\\source\\repos\\G-Point\\GPoint\\GPoint.Domain\\GPoint.Domain.csproj"
+              "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.Domain\\GPoint.Domain.csproj": {
+                "projectPath": "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.Domain\\GPoint.Domain.csproj"
               }
             }
           }
@@ -129,7 +129,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net9.0": {
@@ -170,21 +170,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.307/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\atpopov21\\source\\repos\\G-Point\\GPoint\\GPoint.Domain\\GPoint.Domain.csproj": {
+    "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.Domain\\GPoint.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\atpopov21\\source\\repos\\G-Point\\GPoint\\GPoint.Domain\\GPoint.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.Domain\\GPoint.Domain.csproj",
         "projectName": "GPoint.Domain",
-        "projectPath": "C:\\Users\\atpopov21\\source\\repos\\G-Point\\GPoint\\GPoint.Domain\\GPoint.Domain.csproj",
-        "packagesPath": "C:\\Users\\atpopov21\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\atpopov21\\source\\repos\\G-Point\\GPoint\\GPoint.Domain\\obj\\",
+        "projectPath": "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.Domain\\GPoint.Domain.csproj",
+        "packagesPath": "C:\\Users\\stili\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\atpopov21\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\stili\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -208,7 +208,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net9.0": {
@@ -229,7 +229,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.307/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

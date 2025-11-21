@@ -1,4 +1,5 @@
 import type { Slot, CreateSlot, UpdateSlot } from "../types/slot";
+import { getContextualErrorMessage } from "../utils/errorHandler";
 
 const API_BASE_URL = "http://localhost:5141/api/Slot";
 
@@ -6,7 +7,7 @@ export async function fetchSlot(id: string): Promise<Slot> {
     const response = await fetch(`${API_BASE_URL}/GetSlotById/${id}`);
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch slot data. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'fetch', resource: 'Time Slot' }));
     }
 
     const slotData = await response.json();
@@ -17,7 +18,7 @@ export async function fetchAllSlots(): Promise<Slot[]> {
     const response = await fetch(`${API_BASE_URL}/GetAllSlots`);
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch all slots. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'fetch', resource: 'Time Slots' }));
     }
 
     const slots = await response.json();
@@ -28,7 +29,7 @@ export async function fetchSlotsBySpecialistId(specialistId: string): Promise<Sl
     const response = await fetch(`${API_BASE_URL}/GetSlotsBySpecialistId/${specialistId}`);
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch slots by specialist ID. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'fetch', resource: 'Time Slots' }));
     }
 
     const slots = await response.json();
@@ -39,7 +40,7 @@ export async function fetchSlotsByServiceId(serviceId: string): Promise<Slot[]> 
     const response = await fetch(`${API_BASE_URL}/GetSlotsByServiceId/${serviceId}`);
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch slots by service ID. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'fetch', resource: 'Time Slots' }));
     }
 
     const slots = await response.json();
@@ -52,7 +53,7 @@ export async function fetchAvailableSlots(specialistId: string, startDate: strin
     );
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch available slots. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'fetch', resource: 'Available Time Slots' }));
     }
 
     const slots = await response.json();
@@ -65,7 +66,7 @@ export async function fetchAvailableSlotsByService(serviceId: string, startDate:
     );
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch available slots by service. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'fetch', resource: 'Available Time Slots' }));
     }
 
     const slots = await response.json();
@@ -82,7 +83,7 @@ export async function createSlot(slotData: CreateSlot): Promise<Slot> {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to create slot. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'create', resource: 'Time Slot' }));
     }
 
     const createdSlot = await response.json();
@@ -99,7 +100,7 @@ export async function updateSlot(slotData: UpdateSlot): Promise<Slot> {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to update slot. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'update', resource: 'Time Slot' }));
     }
 
     const updatedSlot = await response.json();
@@ -112,7 +113,7 @@ export async function deleteSlot(id: string): Promise<void> {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to delete slot. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'delete', resource: 'Time Slot' }));
     }
 }
 
@@ -122,7 +123,7 @@ export async function bookSlot(slotId: string): Promise<void> {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to book slot. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'book', resource: 'Time Slot' }));
     }
 }
 
@@ -132,6 +133,6 @@ export async function releaseSlot(slotId: string): Promise<void> {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to release slot. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'update', resource: 'Time Slot' }));
     }
 }

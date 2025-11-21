@@ -60,11 +60,8 @@ export default function Register({ onRegisterSuccess, onLoginClick }: RegisterPr
         onRegisterSuccess(createdUser);
       }
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message || 'Registration failed. Please try again.');
-      } else {
-        setError('Registration failed. Please try again.');
-      }
+      const errorMessage = err instanceof Error ? err.message : 'Registration failed. Please try again.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

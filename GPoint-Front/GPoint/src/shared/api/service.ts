@@ -1,4 +1,5 @@
 import type { Service, CreateService, UpdateService } from "../types/service";
+import { getContextualErrorMessage } from "../utils/errorHandler";
 
 const API_BASE_URL = "http://localhost:5141/api/Service";
 
@@ -6,7 +7,7 @@ export async function fetchService(id: string): Promise<Service> {
     const response = await fetch(`${API_BASE_URL}/GetServiceById/${id}`);
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch service data. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'fetch', resource: 'Service' }));
     }
 
     const serviceData = await response.json();
@@ -17,7 +18,7 @@ export async function fetchAllServices(): Promise<Service[]> {
     const response = await fetch(`${API_BASE_URL}/GetAllServices`);
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch all services. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'fetch', resource: 'Services' }));
     }
 
     const services = await response.json();
@@ -28,7 +29,7 @@ export async function fetchServicesBySpecialistId(specialistId: string): Promise
     const response = await fetch(`${API_BASE_URL}/GetServicesBySpecialistId/${specialistId}`);
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch services by specialist ID. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'fetch', resource: 'Services' }));
     }
 
     const services = await response.json();
@@ -45,7 +46,7 @@ export async function createService(serviceData: CreateService): Promise<Service
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to create service. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'create', resource: 'Service' }));
     }
 
     const createdService = await response.json();
@@ -62,7 +63,7 @@ export async function updateService(serviceData: UpdateService): Promise<Service
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to update service. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'update', resource: 'Service' }));
     }
 
     const updatedService = await response.json();
@@ -75,6 +76,6 @@ export async function deleteService(id: string): Promise<void> {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to delete service. Status: ${response.status}`);
+        throw new Error(getContextualErrorMessage(response, { action: 'delete', resource: 'Service' }));
     }
 }

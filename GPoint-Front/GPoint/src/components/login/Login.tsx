@@ -40,11 +40,8 @@ export default function Login({ onLoginSuccess, onRegisterClick }: LoginProps) {
         }
       }
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message || 'Login failed. Please check your credentials.');
-      } else {
-        setError('Login failed. Please check your credentials.');
-      }
+      const errorMessage = err instanceof Error ? err.message : 'Login failed. Please check your credentials.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
