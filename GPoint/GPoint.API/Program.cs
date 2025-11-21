@@ -25,7 +25,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<GPointDbContext>(options =>
-    options.UseSqlServer(Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")));
+    options.UseSqlServer("Server=tcp:gpointserver.database.windows.net,1433;Initial Catalog=GPoint;Persist Security Info=False;User ID=GPOINT-ADMIN;Password=SecretPassword211125!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;"));
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IServiceService, ServiceService>();

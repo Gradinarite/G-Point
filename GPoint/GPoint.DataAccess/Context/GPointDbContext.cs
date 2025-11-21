@@ -30,7 +30,7 @@ public partial class GPointDbContext : DbContext
         Env.Load();
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection"));
+            optionsBuilder.UseSqlServer("Server=tcp:gpointserver.database.windows.net,1433;Initial Catalog=GPoint;Persist Security Info=False;User ID=GPOINT-ADMIN;Password=SecretPassword211125!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
         }
     }
 

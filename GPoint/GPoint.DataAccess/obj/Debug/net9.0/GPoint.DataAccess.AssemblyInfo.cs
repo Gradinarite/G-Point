@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GPoint.DataAccess")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3bde3944c16bd51d12d7c18ac19e7cef89fd77a3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b60eb05819381f8e5cc69da4a6a1ba7adae90db2")]
 [assembly: System.Reflection.AssemblyProductAttribute("GPoint.DataAccess")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GPoint.DataAccess")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
