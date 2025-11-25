@@ -4,6 +4,8 @@ import type { Slot } from '../../shared/types/slot';
 import { createAppointment } from '../../shared/api/appointment';
 import { fetchSlotsByServiceId } from '../../shared/api/slot';
 import type { CreateAppointment } from '../../shared/types/appointment';
+import { useToast } from '../../shared/components/ToastContext';
+import { isNotPastDate } from '../../shared/utils/validation';
 import './BookingModal.css';
 
 interface BookingModalProps {
@@ -20,6 +22,7 @@ export default function BookingModal({ service, userId, onClose, onBookingSucces
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [loadingSlots, setLoadingSlots] = useState(false);
+  const { showSuccess, showError } = useToast();
 
   // Fetch available slots for the service when date is selected
   useEffect(() => {
@@ -61,13 +64,24 @@ export default function BookingModal({ service, userId, onClose, onBookingSucces
   const today = new Date().toISOString().split('T')[0];
 
   const handleBookAppointment = async () => {
-    if (!selectedDate || !selectedSlot) {
-      setError('Please select both date and time slot');
+    setError('');
+
+    if (!selectedDate) {
+      setError('Please select a date');
+      return;
+    }
+
+    if (!isNotPastDate(selectedDate)) {
+      setError('Cannot book appointments in the past');
+      return;
+    }
+
+    if (!selectedSlot) {
+      setError('Please select a time slot');
       return;
     }
 
     setLoading(true);
-    setError('');
 
     try {
       const appointmentData: CreateAppointment = {
@@ -78,11 +92,13 @@ export default function BookingModal({ service, userId, onClose, onBookingSucces
       };
 
       await createAppointment(appointmentData);
+      showSuccess('Appointment booked successfully!');
       onBookingSuccess();
       onClose();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unable to book appointment. Please try again.';
       setError(errorMessage);
+      showError(errorMessage);
       
       // Reload slots to get updated availability if it was a conflict
       if (errorMessage.toLowerCase().includes('no longer available') || errorMessage.toLowerCase().includes('conflict')) {
@@ -101,10 +117,7 @@ export default function BookingModal({ service, userId, onClose, onBookingSucces
         } catch (reloadErr) {
           console.error('Failed to reload slots:', reloadErr);
         }
-      } else {
-        setError('Failed to book appointment. Please try again.');
       }
-      console.error('Booking error:', err);
     } finally {
       setLoading(false);
     }

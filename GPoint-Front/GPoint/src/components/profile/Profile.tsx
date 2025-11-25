@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import type { User } from '../../shared/types/user';
 import { updateUser } from '../../shared/api/user';
+import { useToast } from '../../shared/components/ToastContext';
+import { isValidEmail, isValidName } from '../../shared/utils/validation';
 import './Profile.css';
 
 interface ProfileProps {
@@ -14,29 +16,44 @@ export default function Profile({ user, onUserUpdate, onClose }: ProfileProps) {
   const [fullName, setFullName] = useState(user.fullName);
   const [email, setEmail] = useState(user.email);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const { showSuccess, showError } = useToast();
 
   const handleUpdate = async () => {
-    setLoading(true);
     setError('');
-    setMessage('');
+
+    // Validate inputs
+    if (!fullName.trim() || !email.trim()) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    if (!isValidName(fullName)) {
+      setError('Please enter a valid full name (at least 2 characters)');
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const updatedUser = await updateUser(user.id, {
-        fullName,
-        email,
+        fullName: fullName.trim(),
+        email: email.trim().toLowerCase(),
         role: user.role
       });
 
       onUserUpdate(updatedUser);
-      setMessage('Profile updated successfully!');
+      showSuccess('Profile updated successfully!');
       setIsEditing(false);
-      
-      setTimeout(() => setMessage(''), 3000);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unable to update profile. Please try again.';
       setError(errorMessage);
+      showError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -62,7 +79,6 @@ export default function Profile({ user, onUserUpdate, onClose }: ProfileProps) {
             {user.fullName.charAt(0).toUpperCase()}
           </div>
 
-          {message && <div className="success-message">{message}</div>}
           {error && <div className="error-message">{error}</div>}
 
           {!isEditing ? (
@@ -99,7 +115,10 @@ export default function Profile({ user, onUserUpdate, onClose }: ProfileProps) {
                 <input
                   type="text"
                   value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
+                  onChange={(e) => {
+                    setFullName(e.target.value);
+                    setError('');
+                  }}
                   disabled={loading}
                 />
               </div>
@@ -108,7 +127,10 @@ export default function Profile({ user, onUserUpdate, onClose }: ProfileProps) {
                 <input
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setError('');
+                  }}
                   disabled={loading}
                 />
               </div>

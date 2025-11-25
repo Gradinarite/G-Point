@@ -74,6 +74,20 @@
   cursor: pointer;
 }
 
+.password-strength {
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.password-strength.strong {
+  color: #10b981;
+}
+
+.password-strength.weak {
+  color: #f59e0b;
+}
+
 .error-message {
   background-color: #fee;
   border: 1px solid #fcc;

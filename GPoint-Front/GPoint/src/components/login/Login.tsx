@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { fetchUserByEmail } from '../../shared/api/user';
+import { validateCredentials } from '../../shared/api/user';
 import type { User } from '../../shared/types/user';
+import { useToast } from '../../shared/components/ToastContext';
+import { useTranslation } from '../../shared/contexts/TranslationContext';
+import { isValidEmail } from '../../shared/utils/validation';
 import './Login.css';
 
 interface LoginProps {
@@ -14,34 +17,39 @@ export default function Login({ onLoginSuccess, onRegisterClick }: LoginProps) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { showError, showSuccess } = useToast();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
+
+    // Validate inputs
+    if (!email.trim() || !password) {
+      setError(t('error.fillAllFields'));
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setError(t('error.validEmail'));
+      return;
+    }
+
     setLoading(true);
 
     try {
-      // Validate inputs
-      if (!email || !password) {
-        setError('Please enter both email and password');
-        setLoading(false);
-        return;
-      }
+      // Validate credentials with backend
+      const user = await validateCredentials(email, password);
 
-      // Fetch user by email
-      const user = await fetchUserByEmail(email);
-
-      // Note: In a real application, password verification should be done on the backend
-      // For now, we'll just check if the user exists
-      if (user) {
-        // Login successful
-        if (onLoginSuccess) {
-          onLoginSuccess(user);
-        }
+      // Login successful
+      showSuccess(`${t('toast.loginSuccess')}, ${user.fullName}!`);
+      if (onLoginSuccess) {
+        onLoginSuccess(user);
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Login failed. Please check your credentials.';
       setError(errorMessage);
+      showError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -50,33 +58,41 @@ export default function Login({ onLoginSuccess, onRegisterClick }: LoginProps) {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h1 className="login-title">Welcome to GPoint</h1>
-        <p className="login-subtitle">Sign in to your account</p>
+        <h1 className="login-title">{t('auth.welcome')}</h1>
+        <p className="login-subtitle">{t('auth.signIn')}</p>
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{t('auth.email')}</label>
             <input
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError('');
+              }}
+              placeholder={t('auth.email')}
               required
               disabled={loading}
+              autoComplete="email"
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">{t('auth.password')}</label>
             <input
               id="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError('');
+              }}
+              placeholder={t('auth.password')}
               required
               disabled={loading}
+              autoComplete="current-password"
             />
           </div>
 
@@ -87,19 +103,19 @@ export default function Login({ onLoginSuccess, onRegisterClick }: LoginProps) {
             className="btn-primary" 
             disabled={loading}
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? t('auth.signingIn') : t('auth.signInButton')}
           </button>
         </form>
 
         <div className="login-footer">
-          <p>Don't have an account?</p>
+          <p>{t('auth.noAccount')}</p>
           <button 
             type="button"
             className="btn-secondary"
             onClick={onRegisterClick}
             disabled={loading}
           >
-            Create Account
+            {t('auth.createAccount')}
           </button>
         </div>
       </div>

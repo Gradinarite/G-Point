@@ -3,6 +3,8 @@ import Login from './components/login/Login';
 import Register from './components/login/Register';
 import Home from './components/home/Home';
 import type { User } from './shared/types/user';
+import { ToastProvider } from './shared/components/ToastContext';
+import { TranslationProvider } from './shared/contexts/TranslationContext';
 import './App.css';
 
 type Page = 'login' | 'register' | 'dashboard';
@@ -58,30 +60,32 @@ function App() {
   };
 
   return (
-    <>
-      {currentPage === 'login' && (
-        <Login 
-          onLoginSuccess={handleLoginSuccess}
-          onRegisterClick={() => setCurrentPage('register')}
-        />
-      )}
-      
-      {currentPage === 'register' && (
-        <Register 
-          onRegisterSuccess={handleRegisterSuccess}
-          onLoginClick={() => setCurrentPage('login')}
-        />
-      )}
-      
-      {currentPage === 'dashboard' && currentUser && (
-        <Home 
-          userName={currentUser.fullName}
-          user={currentUser}
-          onLogout={handleLogout}
-          onUserUpdate={handleUserUpdate}
-        />
-      )}
-    </>
+    <TranslationProvider>
+      <ToastProvider>
+        {currentPage === 'login' && (
+          <Login 
+            onLoginSuccess={handleLoginSuccess}
+            onRegisterClick={() => setCurrentPage('register')}
+          />
+        )}
+        
+        {currentPage === 'register' && (
+          <Register 
+            onRegisterSuccess={handleRegisterSuccess}
+            onLoginClick={() => setCurrentPage('login')}
+          />
+        )}
+        
+        {currentPage === 'dashboard' && currentUser && (
+          <Home 
+            userName={currentUser.fullName}
+            user={currentUser}
+            onLogout={handleLogout}
+            onUserUpdate={handleUserUpdate}
+          />
+        )}
+      </ToastProvider>
+    </TranslationProvider>
   );
 }
 

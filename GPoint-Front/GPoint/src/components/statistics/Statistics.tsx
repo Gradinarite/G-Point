@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { fetchAppointmentsBySpecialistId } from '../../shared/api/appointment';
+import { StatCardSkeleton } from '../../shared/components/Skeleton';
 import './Statistics.css';
 
 interface StatisticsProps {
@@ -56,7 +57,14 @@ export default function Statistics({ userId }: StatisticsProps) {
         <div className="statistics-header">
           <h1>Statistics</h1>
         </div>
-        <div className="loading-state">Loading statistics...</div>
+        <div className="statistics-content">
+          <div className="stats-cards">
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+          </div>
+        </div>
       </div>
     );
   }

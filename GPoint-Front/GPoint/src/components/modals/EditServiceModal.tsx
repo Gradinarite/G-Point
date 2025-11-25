@@ -3,6 +3,9 @@ import { updateService, deleteService } from '../../shared/api/service';
 import { fetchSlotsByServiceId, createSlot, deleteSlot } from '../../shared/api/slot';
 import type { Service, UpdateService } from '../../shared/types/service';
 import type { Slot, CreateSlot } from '../../shared/types/slot';
+import { useToast } from '../../shared/components/ToastContext';
+import ConfirmModal from '../../shared/components/ConfirmModal';
+import { isValidServiceName, isValidDuration, isEndTimeAfterStartTime, isNotPastDate } from '../../shared/utils/validation';
 import './CreateServiceModal.css';
 
 interface EditServiceModalProps {
@@ -33,6 +36,9 @@ export default function EditServiceModal({ service, specialistId, onClose, onSer
   const [loadingSlots, setLoadingSlots] = useState(true);
   const [error, setError] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showDeleteSlotConfirm, setShowDeleteSlotConfirm] = useState(false);
+  const [slotToDelete, setSlotToDelete] = useState<string | null>(null);
+  const { showSuccess, showError } = useToast();
 
   useEffect(() => {
     loadSlots();
@@ -50,49 +56,73 @@ export default function EditServiceModal({ service, specialistId, onClose, onSer
   };
 
   const handleAddTimeSlot = () => {
+    setError('');
+
     if (!currentSlot.date || !currentSlot.startTime || !currentSlot.endTime) {
       setError('Please fill in all time slot fields');
       return;
     }
 
-    const start = new Date(`${currentSlot.date}T${currentSlot.startTime}`);
-    const end = new Date(`${currentSlot.date}T${currentSlot.endTime}`);
+    if (!isNotPastDate(currentSlot.date)) {
+      setError('Cannot create slots for past dates');
+      return;
+    }
 
-    if (end <= start) {
+    if (!isEndTimeAfterStartTime(currentSlot.startTime, currentSlot.endTime)) {
       setError('End time must be after start time');
       return;
     }
 
     setNewTimeSlots([...newTimeSlots, currentSlot]);
     setCurrentSlot({ date: '', startTime: '', endTime: '' });
-    setError('');
   };
 
   const handleRemoveNewTimeSlot = (index: number) => {
     setNewTimeSlots(newTimeSlots.filter((_, i) => i !== index));
   };
 
-  const handleDeleteExistingSlot = async (slotId: string) => {
+  const handleDeleteExistingSlot = (slotId: string) => {
+    setSlotToDelete(slotId);
+    setShowDeleteSlotConfirm(true);
+  };
+
+  const confirmDeleteSlot = async () => {
+    if (!slotToDelete) return;
+
     try {
-      await deleteSlot(slotId);
-      setExistingSlots(existingSlots.filter(s => s.id !== slotId));
+      await deleteSlot(slotToDelete);
+      setExistingSlots(existingSlots.filter(s => s.id !== slotToDelete));
+      showSuccess('Time slot deleted successfully');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unable to delete time slot.';
       setError(errorMessage);
-      console.error('Delete slot error:', err);
+      showError(errorMessage);
+    } finally {
+      setShowDeleteSlotConfirm(false);
+      setSlotToDelete(null);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     
     if (!name.trim()) {
       setError('Service name is required');
       return;
     }
 
+    if (!isValidServiceName(name)) {
+      setError('Service name must be between 3 and 100 characters');
+      return;
+    }
+
+    if (!isValidDuration(durationInMinutes)) {
+      setError('Duration must be between 15 minutes and 8 hours');
+      return;
+    }
+
     setLoading(true);
-    setError('');
 
     try {
       const serviceData: UpdateService = {
@@ -116,12 +146,13 @@ export default function EditServiceModal({ service, specialistId, onClose, onSer
         await createSlot(slotData);
       }
 
+      showSuccess('Service updated successfully!');
       onServiceUpdated();
       onClose();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unable to update service. Please try again.';
       setError(errorMessage);
-      console.error('Update service error:', err);
+      showError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -129,16 +160,17 @@ export default function EditServiceModal({ service, specialistId, onClose, onSer
 
   const handleDeleteService = async () => {
     setLoading(true);
-    setError('');
+    setShowDeleteConfirm(false);
 
     try {
       await deleteService(service.serviceId);
+      showSuccess('Service deleted successfully');
       onServiceUpdated();
       onClose();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unable to delete service.';
       setError(errorMessage);
-      console.error('Delete service error:', err);
+      showError(errorMessage);
       setLoading(false);
     }
   };
@@ -305,30 +337,32 @@ export default function EditServiceModal({ service, specialistId, onClose, onSer
           </div>
         </form>
 
-        {showDeleteConfirm && (
-          <div className="confirm-overlay">
-            <div className="confirm-dialog">
-              <h3>Delete Service?</h3>
-              <p>This will delete the service and all its time slots. Booked appointments will also be cancelled. This action cannot be undone.</p>
-              <div className="confirm-buttons">
-                <button 
-                  className="btn-confirm-delete"
-                  onClick={handleDeleteService}
-                  disabled={loading}
-                >
-                  {loading ? 'Deleting...' : 'Yes, Delete'}
-                </button>
-                <button 
-                  className="btn-confirm-cancel"
-                  onClick={() => setShowDeleteConfirm(false)}
-                  disabled={loading}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Delete Service Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showDeleteConfirm}
+          title="Delete Service?"
+          message="This will delete the service and all its time slots. Booked appointments will also be cancelled. This action cannot be undone."
+          confirmText="Yes, Delete"
+          cancelText="Cancel"
+          confirmButtonClass="btn-confirm-danger"
+          onConfirm={handleDeleteService}
+          onCancel={() => setShowDeleteConfirm(false)}
+        />
+
+        {/* Delete Slot Confirmation Modal */}
+        <ConfirmModal
+          isOpen={showDeleteSlotConfirm}
+          title="Delete Time Slot?"
+          message="Are you sure you want to delete this time slot? This action cannot be undone."
+          confirmText="Yes, Delete"
+          cancelText="Cancel"
+          confirmButtonClass="btn-confirm-danger"
+          onConfirm={confirmDeleteSlot}
+          onCancel={() => {
+            setShowDeleteSlotConfirm(false);
+            setSlotToDelete(null);
+          }}
+        />
       </div>
     </div>
   );

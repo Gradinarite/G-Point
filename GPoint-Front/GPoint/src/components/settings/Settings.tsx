@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { User } from '../../shared/types/user';
+import { useTranslation } from '../../shared/contexts/TranslationContext';
 import './Settings.css';
 
 interface SettingsProps {
@@ -7,63 +8,16 @@ interface SettingsProps {
   onUserUpdate: (user: User) => void;
 }
 
-// Translation object
-const translations = {
-  en: {
-    settings: 'Settings',
-    manageAccount: 'Manage your account and preferences',
-    appearance: 'Appearance',
-    darkMode: 'Dark Mode',
-    darkModeDesc: 'Switch between light and dark theme',
-    language: 'Language',
-    languageDesc: 'Choose your preferred language',
-    notifications: 'Notifications',
-    emailNotifications: 'Email Notifications',
-    emailNotificationsDesc: 'Receive updates via email',
-    smsNotifications: 'SMS Notifications',
-    smsNotificationsDesc: 'Receive text message alerts',
-    appointmentReminders: 'Appointment Reminders',
-    appointmentRemindersDesc: 'Get notified before appointments',
-    bookingPreferences: 'Booking Preferences',
-    autoBooking: 'Auto-Booking',
-    autoBookingDesc: 'Automatically confirm available slots',
-    timezone: 'Timezone',
-    timezoneDesc: 'Set your local timezone for appointments',
-  },
-  bg: {
-    settings: 'Настройки',
-    manageAccount: 'Управлявайте вашия акаунт и предпочитания',
-    appearance: 'Външен вид',
-    darkMode: 'Тъмен режим',
-    darkModeDesc: 'Превключване между светла и тъмна тема',
-    language: 'Език',
-    languageDesc: 'Изберете предпочитан език',
-    notifications: 'Известия',
-    emailNotifications: 'Имейл известия',
-    emailNotificationsDesc: 'Получавайте актуализации по имейл',
-    smsNotifications: 'SMS известия',
-    smsNotificationsDesc: 'Получавайте текстови съобщения',
-    appointmentReminders: 'Напомняния за срещи',
-    appointmentRemindersDesc: 'Получавайте известия преди срещи',
-    bookingPreferences: 'Предпочитания за резервации',
-    autoBooking: 'Автоматична резервация',
-    autoBookingDesc: 'Автоматично потвърждаване на свободни часове',
-    timezone: 'Часова зона',
-    timezoneDesc: 'Задайте вашата часова зона за срещи',
-  }
-};
-
 export default function Settings({ user, onUserUpdate }: SettingsProps) {
   const [darkMode, setDarkMode] = useState(false);
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [smsNotifications, setSmsNotifications] = useState(false);
   const [appointmentReminders, setAppointmentReminders] = useState(true);
   const [autoBooking, setAutoBooking] = useState(false);
-  const [language, setLanguage] = useState('en');
   const [timezone, setTimezone] = useState('UTC');
   const [message, setMessage] = useState('');
 
-  const t = translations[language as keyof typeof translations];
+  const { language, setLanguage, t } = useTranslation();
 
   // Load settings from localStorage
   useEffect(() => {
@@ -72,7 +26,6 @@ export default function Settings({ user, onUserUpdate }: SettingsProps) {
     const savedSmsNotifications = localStorage.getItem('smsNotifications') === 'true';
     const savedAppointmentReminders = localStorage.getItem('appointmentReminders') !== 'false';
     const savedAutoBooking = localStorage.getItem('autoBooking') === 'true';
-    const savedLanguage = localStorage.getItem('language') || 'en';
     const savedTimezone = localStorage.getItem('timezone') || 'UTC';
 
     setDarkMode(savedDarkMode);
@@ -80,7 +33,6 @@ export default function Settings({ user, onUserUpdate }: SettingsProps) {
     setSmsNotifications(savedSmsNotifications);
     setAppointmentReminders(savedAppointmentReminders);
     setAutoBooking(savedAutoBooking);
-    setLanguage(savedLanguage);
     setTimezone(savedTimezone);
 
     // Apply dark mode
@@ -101,6 +53,11 @@ export default function Settings({ user, onUserUpdate }: SettingsProps) {
   };
 
   const handleSettingChange = (setting: string, value: boolean | string) => {
+    if (setting === 'language') {
+      setLanguage(value as 'en' | 'bg');
+      return;
+    }
+
     localStorage.setItem(setting, value.toString());
     
     switch (setting) {
@@ -116,9 +73,6 @@ export default function Settings({ user, onUserUpdate }: SettingsProps) {
       case 'autoBooking':
         setAutoBooking(value as boolean);
         break;
-      case 'language':
-        setLanguage(value as string);
-        break;
       case 'timezone':
         setTimezone(value as string);
         break;
@@ -128,8 +82,8 @@ export default function Settings({ user, onUserUpdate }: SettingsProps) {
   return (
     <div className="settings-container">
       <div className="settings-header">
-        <h1>{t.settings}</h1>
-        <p>{t.manageAccount}</p>
+        <h1>{t('settings.title')}</h1>
+        <p>{t('settings.manageAccount')}</p>
       </div>
 
       <div className="settings-content">
@@ -137,12 +91,12 @@ export default function Settings({ user, onUserUpdate }: SettingsProps) {
 
         {/* Appearance Section */}
         <section className="settings-section">
-          <h2>{t.appearance}</h2>
+          <h2>{t('settings.appearance')}</h2>
           <div className="settings-card">
             <div className="setting-item">
               <div className="setting-info">
-                <h3>{t.darkMode}</h3>
-                <p>{t.darkModeDesc}</p>
+                <h3>{t('settings.darkMode')}</h3>
+                <p>{t('settings.darkModeDesc')}</p>
               </div>
               <label className="toggle-switch">
                 <input
@@ -156,8 +110,8 @@ export default function Settings({ user, onUserUpdate }: SettingsProps) {
 
             <div className="setting-item">
               <div className="setting-info">
-                <h3>{t.language}</h3>
-                <p>{t.languageDesc}</p>
+                <h3>{t('settings.language')}</h3>
+                <p>{t('settings.languageDesc')}</p>
               </div>
               <select
                 value={language}
@@ -173,12 +127,12 @@ export default function Settings({ user, onUserUpdate }: SettingsProps) {
 
         {/* Notifications Section */}
         <section className="settings-section">
-          <h2>{t.notifications}</h2>
+          <h2>{t('settings.notifications')}</h2>
           <div className="settings-card">
             <div className="setting-item">
               <div className="setting-info">
-                <h3>{t.emailNotifications}</h3>
-                <p>{t.emailNotificationsDesc}</p>
+                <h3>{t('settings.emailNotifications')}</h3>
+                <p>{t('settings.emailNotificationsDesc')}</p>
               </div>
               <label className="toggle-switch">
                 <input
@@ -192,8 +146,8 @@ export default function Settings({ user, onUserUpdate }: SettingsProps) {
 
             <div className="setting-item">
               <div className="setting-info">
-                <h3>{t.smsNotifications}</h3>
-                <p>{t.smsNotificationsDesc}</p>
+                <h3>{t('settings.smsNotifications')}</h3>
+                <p>{t('settings.smsNotificationsDesc')}</p>
               </div>
               <label className="toggle-switch">
                 <input
@@ -207,8 +161,8 @@ export default function Settings({ user, onUserUpdate }: SettingsProps) {
 
             <div className="setting-item">
               <div className="setting-info">
-                <h3>{t.appointmentReminders}</h3>
-                <p>{t.appointmentRemindersDesc}</p>
+                <h3>{t('settings.appointmentReminders')}</h3>
+                <p>{t('settings.appointmentRemindersDesc')}</p>
               </div>
               <label className="toggle-switch">
                 <input
@@ -224,12 +178,12 @@ export default function Settings({ user, onUserUpdate }: SettingsProps) {
 
         {/* Booking Preferences Section */}
         <section className="settings-section">
-          <h2>{t.bookingPreferences}</h2>
+          <h2>{t('settings.bookingPreferences')}</h2>
           <div className="settings-card">
             <div className="setting-item">
               <div className="setting-info">
-                <h3>{t.autoBooking}</h3>
-                <p>{t.autoBookingDesc}</p>
+                <h3>{t('settings.autoBooking')}</h3>
+                <p>{t('settings.autoBookingDesc')}</p>
               </div>
               <label className="toggle-switch">
                 <input
@@ -243,8 +197,8 @@ export default function Settings({ user, onUserUpdate }: SettingsProps) {
 
             <div className="setting-item">
               <div className="setting-info">
-                <h3>{t.timezone}</h3>
-                <p>{t.timezoneDesc}</p>
+                <h3>{t('settings.timezone')}</h3>
+                <p>{t('settings.timezoneDesc')}</p>
               </div>
               <select
                 value={timezone}

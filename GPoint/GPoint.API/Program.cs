@@ -24,8 +24,14 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddOpenApi();
+
+// Get connection string from environment variable or configuration
+var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection") 
+                       ?? builder.Configuration.GetConnectionString("DefaultConnection")
+                       ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
 builder.Services.AddDbContext<GPointDbContext>(options =>
-    options.UseSqlServer("Server=tcp:gpointserver.database.windows.net,1433;Initial Catalog=GPoint;Persist Security Info=False;User ID=GPOINT-ADMIN;Password=SecretPassword211125!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;"));
+    options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IServiceService, ServiceService>();

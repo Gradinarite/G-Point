@@ -3,6 +3,8 @@ import { createService } from '../../shared/api/service';
 import { createSlot } from '../../shared/api/slot';
 import type { CreateService } from '../../shared/types/service';
 import type { CreateSlot } from '../../shared/types/slot';
+import { useToast } from '../../shared/components/ToastContext';
+import { isValidServiceName, isValidDuration, isEndTimeAfterStartTime, isNotPastDate } from '../../shared/utils/validation';
 import './CreateServiceModal.css';
 
 interface CreateServiceModalProps {
@@ -29,24 +31,28 @@ export default function CreateServiceModal({ specialistId, onClose, onServiceCre
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { showSuccess, showError } = useToast();
 
   const handleAddTimeSlot = () => {
+    setError('');
+
     if (!currentSlot.date || !currentSlot.startTime || !currentSlot.endTime) {
       setError('Please fill in all time slot fields');
       return;
     }
 
-    const start = new Date(`${currentSlot.date}T${currentSlot.startTime}`);
-    const end = new Date(`${currentSlot.date}T${currentSlot.endTime}`);
+    if (!isNotPastDate(currentSlot.date)) {
+      setError('Cannot create slots for past dates');
+      return;
+    }
 
-    if (end <= start) {
+    if (!isEndTimeAfterStartTime(currentSlot.startTime, currentSlot.endTime)) {
       setError('End time must be after start time');
       return;
     }
 
     setTimeSlots([...timeSlots, currentSlot]);
     setCurrentSlot({ date: '', startTime: '', endTime: '' });
-    setError('');
   };
 
   const handleRemoveTimeSlot = (index: number) => {
@@ -55,9 +61,20 @@ export default function CreateServiceModal({ specialistId, onClose, onServiceCre
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     
     if (!name.trim()) {
       setError('Service name is required');
+      return;
+    }
+
+    if (!isValidServiceName(name)) {
+      setError('Service name must be between 3 and 100 characters');
+      return;
+    }
+
+    if (!isValidDuration(durationInMinutes)) {
+      setError('Duration must be between 15 minutes and 8 hours');
       return;
     }
 
@@ -67,7 +84,6 @@ export default function CreateServiceModal({ specialistId, onClose, onServiceCre
     }
 
     setLoading(true);
-    setError('');
 
     try {
       const serviceData: CreateService = {
@@ -90,12 +106,13 @@ export default function CreateServiceModal({ specialistId, onClose, onServiceCre
         await createSlot(slotData);
       }
 
+      showSuccess('Service created successfully!');
       onServiceCreated();
       onClose();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unable to create service. Please try again.';
       setError(errorMessage);
-      console.error('Create service error:', err);
+      showError(errorMessage);
     } finally {
       setLoading(false);
     }

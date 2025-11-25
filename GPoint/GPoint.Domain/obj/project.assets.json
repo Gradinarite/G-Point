@@ -8,24 +8,32 @@
     "net9.0": []
   },
   "packageFolders": {
-    "C:\\Users\\stili\\.nuget\\packages\\": {}
+    "C:\\Users\\HP\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.Domain\\GPoint.Domain.csproj",
+      "projectUniqueName": "C:\\G-Point\\GPoint\\GPoint.Domain\\GPoint.Domain.csproj",
       "projectName": "GPoint.Domain",
-      "projectPath": "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.Domain\\GPoint.Domain.csproj",
-      "packagesPath": "C:\\Users\\stili\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\stili\\WebstormProjects\\G-Point\\Gpoint\\GPoint.Domain\\obj\\",
+      "projectPath": "C:\\G-Point\\GPoint\\GPoint.Domain\\GPoint.Domain.csproj",
+      "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+      "outputPath": "C:\\G-Point\\GPoint\\GPoint.Domain\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\stili\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

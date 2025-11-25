@@ -25,3 +25,9 @@ public class UpdateUserDto
     public string? Password { get; set; }
     public UserRole Role { get; set; } = UserRole.User;
 }
+
+public class LoginDto
+{
+    public string Email { get; set; } = null!;
+    public string Password { get; set; } = null!;
+}

@@ -13,4 +13,5 @@ public interface IUserService
     Task<UserDto?> UpdateAsync(Guid id, UpdateUserDto userDto);
     Task<bool> DeleteAsync(Guid id);
     Task<bool> EmailExistsAsync(string email);
+    Task<UserDto?> ValidateCredentialsAsync(string email, string password);
 }

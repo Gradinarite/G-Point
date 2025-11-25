@@ -11,6 +11,7 @@ import BookingModal from '../modals/BookingModal';
 import CreateServiceModal from '../modals/CreateServiceModal';
 import EditServiceModal from '../modals/EditServiceModal';
 import Statistics from '../statistics/Statistics';
+import { ServiceCardSkeleton } from '../../shared/components/Skeleton';
 import './Home.css';
 
 interface HomeProps {
@@ -217,7 +218,12 @@ export default function Home({ userName, user, onLogout, onUserUpdate }: HomePro
                 </div>
                 <div className="services-grid">
                   {loading ? (
-                    <p>Loading services...</p>
+                    <>
+                      <ServiceCardSkeleton />
+                      <ServiceCardSkeleton />
+                      <ServiceCardSkeleton />
+                      <ServiceCardSkeleton />
+                    </>
                   ) : (() => {
                     const myServices = services.filter(s => s.specialistId === user.id);
                     const filteredServices = filterServices(myServices);
@@ -267,7 +273,14 @@ export default function Home({ userName, user, onLogout, onUserUpdate }: HomePro
                 {showAvailableServices && (
                   <div className="services-grid">
                     {loading ? (
-                      <p>Loading services...</p>
+                      <>
+                        <ServiceCardSkeleton />
+                        <ServiceCardSkeleton />
+                        <ServiceCardSkeleton />
+                        <ServiceCardSkeleton />
+                        <ServiceCardSkeleton />
+                        <ServiceCardSkeleton />
+                      </>
                     ) : (() => {
                       const filteredServices = filterServices(services);
                       

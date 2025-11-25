@@ -4,10 +4,11 @@ import { fetchUser } from '../../shared/api/user';
 import { fetchService } from '../../shared/api/service';
 import { fetchSlot } from '../../shared/api/slot';
 import type { Appointment } from '../../shared/types/appointment';
-import type { User } from '../../shared/types/user';
 import { UserRoles } from '../../shared/types/user';
-import type { Service } from '../../shared/types/service';
 import type { Slot } from '../../shared/types/slot';
+import { useToast } from '../../shared/components/ToastContext';
+import ConfirmModal from '../../shared/components/ConfirmModal';
+import { AppointmentCardSkeleton } from '../../shared/components/Skeleton';
 import './Appointments.css';
 
 interface AppointmentsProps {
@@ -36,6 +37,10 @@ export default function Appointments({ userId, userRole, onAppointmentChange }: 
   const [error, setError] = useState('');
   const [cancellingId, setCancellingId] = useState<string | null>(null);
   const [completingId, setCompletingId] = useState<string | null>(null);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [showCompleteConfirm, setShowCompleteConfirm] = useState(false);
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState<string | null>(null);
+  const { showError, showSuccess } = useToast();
 
   const isSpecialist = userRole === UserRoles.Specialist;
 
@@ -128,80 +133,54 @@ export default function Appointments({ userId, userRole, onAppointmentChange }: 
   };
 
   const handleCancelAppointment = async (appointmentId: string) => {
-    if (!confirm('Are you sure you want to cancel this appointment?')) {
-      return;
-    }
+    setSelectedAppointmentId(appointmentId);
+    setShowCancelConfirm(true);
+  };
 
-    setCancellingId(appointmentId);
+  const confirmCancelAppointment = async () => {
+    if (!selectedAppointmentId) return;
+
+    setCancellingId(selectedAppointmentId);
+    setShowCancelConfirm(false);
+    
     try {
-      await cancelAppointment(appointmentId);
-      // Reload appointments after cancellation
+      await cancelAppointment(selectedAppointmentId);
       await loadAppointments();
-      // Notify parent to refresh other components
       onAppointmentChange?.();
+      showSuccess('Appointment cancelled successfully');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unable to cancel appointment. Please try again.';
       setError(errorMessage);
-      console.error('Cancel error:', err);
+      showError(errorMessage);
     } finally {
       setCancellingId(null);
+      setSelectedAppointmentId(null);
     }
   };
 
   const handleCompleteAppointment = async (appointmentId: string) => {
-    if (!confirm('Mark this appointment as completed?')) {
-      return;
-    }
+    setSelectedAppointmentId(appointmentId);
+    setShowCompleteConfirm(true);
+  };
 
-    setCompletingId(appointmentId);
+  const confirmCompleteAppointment = async () => {
+    if (!selectedAppointmentId) return;
+
+    setCompletingId(selectedAppointmentId);
+    setShowCompleteConfirm(false);
+    
     try {
-      await completeAppointment(appointmentId);
-      // Reload appointments after completion
+      await completeAppointment(selectedAppointmentId);
       await loadAppointments();
-      // Notify parent to refresh other components
       onAppointmentChange?.();
+      showSuccess('Appointment marked as completed');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unable to complete appointment. Please try again.';
       setError(errorMessage);
-      console.error('Complete error:', err);
+      showError(errorMessage);
     } finally {
       setCompletingId(null);
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
-
-  const formatTime = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
-  const getStatusClass = (status: number) => {
-    switch (status) {
-      case 1: return 'status-scheduled';
-      case 2: return 'status-completed';
-      case 3: return 'status-cancelled';
-      default: return '';
-    }
-  };
-
-  const getStatusText = (status: number) => {
-    switch (status) {
-      case 1: return 'Scheduled';
-      case 2: return 'Completed';
-      case 3: return 'Cancelled';
-      default: return 'Unknown';
+      setSelectedAppointmentId(null);
     }
   };
 
@@ -211,7 +190,14 @@ export default function Appointments({ userId, userRole, onAppointmentChange }: 
         <div className="appointments-header">
           <h1>My Appointments</h1>
         </div>
-        <div className="loading-state">Loading appointments...</div>
+        <div className="appointments-content">
+          <div className="appointments-grid">
+            <AppointmentCardSkeleton />
+            <AppointmentCardSkeleton />
+            <AppointmentCardSkeleton />
+            <AppointmentCardSkeleton />
+          </div>
+        </div>
       </div>
     );
   }
@@ -342,6 +328,36 @@ export default function Appointments({ userId, userRole, onAppointmentChange }: 
           </div>
         )}
       </div>
+
+      {/* Cancel Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showCancelConfirm}
+        title="Cancel Appointment"
+        message="Are you sure you want to cancel this appointment? This action cannot be undone."
+        confirmText="Yes, Cancel"
+        cancelText="No, Keep It"
+        confirmButtonClass="btn-confirm-danger"
+        onConfirm={confirmCancelAppointment}
+        onCancel={() => {
+          setShowCancelConfirm(false);
+          setSelectedAppointmentId(null);
+        }}
+      />
+
+      {/* Complete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showCompleteConfirm}
+        title="Complete Appointment"
+        message="Mark this appointment as completed? The client will be notified."
+        confirmText="Mark Complete"
+        cancelText="Not Yet"
+        confirmButtonClass="btn-confirm-success"
+        onConfirm={confirmCompleteAppointment}
+        onCancel={() => {
+          setShowCompleteConfirm(false);
+          setSelectedAppointmentId(null);
+        }}
+      />
     </div>
   );
 }

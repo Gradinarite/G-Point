@@ -151,4 +151,30 @@ public class UserService : IUserService
     {
         return await _context.Users.AnyAsync(u => u.Email == email);
     }
+
+    public async Task<UserDto?> ValidateCredentialsAsync(string email, string password)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        
+        if (user == null)
+        {
+            return null;
+        }
+
+        // Verify password using BCrypt
+        bool isPasswordValid = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
+        
+        if (!isPasswordValid)
+        {
+            return null;
+        }
+
+        return new UserDto
+        {
+            Id = user.Id,
+            FullName = user.FullName,
+            Email = user.Email,
+            Role = user.Role
+        };
+    }
 }

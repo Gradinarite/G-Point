@@ -54,6 +54,17 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
+    public async Task<IActionResult> ValidateCredentials([FromBody] LoginDto loginDto)
+    {
+        var user = await UserService.ValidateCredentialsAsync(loginDto.Email, loginDto.Password);
+        if (user is null)
+        {
+            return Unauthorized(new { message = "Invalid email or password" });
+        }
+        return Ok(user);
+    }
+
+    [HttpPost]
     public async Task<IActionResult> CreateUser(CreateUserDto createUserDto)
     {
         var createdUser = await UserService.CreateAsync(createUserDto);

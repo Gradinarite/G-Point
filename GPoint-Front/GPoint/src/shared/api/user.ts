@@ -3,6 +3,26 @@ import { getContextualErrorMessage } from "../utils/errorHandler";
 
 const API_BASE_URL = "http://localhost:5141/api/User";
 
+export async function validateCredentials(email: string, password: string): Promise<User> {
+    const response = await fetch(`${API_BASE_URL}/ValidateCredentials`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+        if (response.status === 401) {
+            throw new Error('Invalid email or password');
+        }
+        throw new Error(getContextualErrorMessage(response, { action: 'login', resource: 'User' }));
+    }
+
+    const userData = await response.json();
+    return userData;
+}
+
 export async function fetchUser(id: string): Promise<User> {
     const response = await fetch(`${API_BASE_URL}/GetUserById/${id}`);
 
