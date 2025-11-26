@@ -8,23 +8,23 @@
     "net9.0": []
   },
   "packageFolders": {
-    "C:\\Users\\HP\\.nuget\\packages\\": {},
+    "C:\\Users\\Aleksandar\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\G-Point\\GPoint\\GPoint.Domain\\GPoint.Domain.csproj",
+      "projectUniqueName": "C:\\Users\\Aleksandar\\Desktop\\project\\G-Point\\GPoint\\GPoint.Domain\\GPoint.Domain.csproj",
       "projectName": "GPoint.Domain",
-      "projectPath": "C:\\G-Point\\GPoint\\GPoint.Domain\\GPoint.Domain.csproj",
-      "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-      "outputPath": "C:\\G-Point\\GPoint\\GPoint.Domain\\obj\\",
+      "projectPath": "C:\\Users\\Aleksandar\\Desktop\\project\\G-Point\\GPoint\\GPoint.Domain\\GPoint.Domain.csproj",
+      "packagesPath": "C:\\Users\\Aleksandar\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Aleksandar\\Desktop\\project\\G-Point\\GPoint\\GPoint.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Aleksandar\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -73,7 +73,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.307/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

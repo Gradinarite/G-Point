@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GPoint.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+764daa50fd9a66b348c4758ecb0b1db68079c715")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4934ac2d76063d32ce9523c42dd659ed848d7ad3")]
 [assembly: System.Reflection.AssemblyProductAttribute("GPoint.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GPoint.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
