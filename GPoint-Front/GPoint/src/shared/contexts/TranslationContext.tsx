@@ -21,8 +21,8 @@ const translations = {
     'auth.signingIn': 'Signing in...',
     'auth.noAccount': "Don't have an account?",
     'auth.createAccount': 'Create Account',
-    'auth.createAccountTitle': 'Create Account',
-    'auth.joinToday': 'Join GPoint today',
+    'auth.createAccountButton': 'Create Account',
+    'auth.joinGPoint': 'Join GPoint today',
     'auth.fullName': 'Full Name',
     'auth.confirmPassword': 'Confirm Password',
     'auth.accountType': 'Account Type',
@@ -204,13 +204,16 @@ const translations = {
     'error.fillSlotFields': 'Please fill in all time slot fields',
     'error.pastSlot': 'Cannot create slots for past dates',
     'error.endAfterStart': 'End time must be after start time',
+    'error.validFullName': 'Please enter a valid full name (at least 2 characters, letters only)',
+    'error.passwordRequirements': 'Password must be at least 8 characters with uppercase, lowercase, and number',
+    'error.registrationFailed': 'Registration failed. Please try again.',
     
     // Password Strength
-    'password.tooShort': 'Password must be at least 8 characters',
-    'password.needUppercase': 'Password must contain at least one uppercase letter',
-    'password.needLowercase': 'Password must contain at least one lowercase letter',
-    'password.needNumber': 'Password must contain at least one number',
-    'password.strong': 'Strong password',
+    'passwordStrength.atLeast8': 'Password must be at least 8 characters',
+    'passwordStrength.needUppercase': 'Password must contain at least one uppercase letter',
+    'passwordStrength.needLowercase': 'Password must contain at least one lowercase letter',
+    'passwordStrength.needNumber': 'Password must contain at least one number',
+    'passwordStrength.strong': 'Strong password',
   },
   bg: {
     // Auth
@@ -222,8 +225,8 @@ const translations = {
     'auth.signingIn': 'Влизане...',
     'auth.noAccount': 'Нямате акаунт?',
     'auth.createAccount': 'Създай Акаунт',
-    'auth.createAccountTitle': 'Създаване на Акаунт',
-    'auth.joinToday': 'Присъединете се към GPoint днес',
+    'auth.createAccountButton': 'Създай Акаунт',
+    'auth.joinGPoint': 'Присъединете се към GPoint днес',
     'auth.fullName': 'Пълно име',
     'auth.confirmPassword': 'Потвърди паролата',
     'auth.accountType': 'Тип акаунт',
@@ -405,13 +408,16 @@ const translations = {
     'error.fillSlotFields': 'Моля, попълнете всички полета за времеви слот',
     'error.pastSlot': 'Не може да създавате слотове за минали дати',
     'error.endAfterStart': 'Крайният час трябва да е след началния',
+    'error.validFullName': 'Моля, въведете валидно пълно име (поне 2 знака, само букви)',
+    'error.passwordRequirements': 'Паролата трябва да е поне 8 знака с главна, малка буква и число',
+    'error.registrationFailed': 'Регистрацията е неуспешна. Моля, опитайте отново.',
     
     // Password Strength
-    'password.tooShort': 'Паролата трябва да е поне 8 знака',
-    'password.needUppercase': 'Паролата трябва да съдържа поне една главна буква',
-    'password.needLowercase': 'Паролата трябва да съдържа поне една малка буква',
-    'password.needNumber': 'Паролата трябва да съдържа поне едно число',
-    'password.strong': 'Силна парола',
+    'passwordStrength.atLeast8': 'Паролата трябва да е поне 8 знака',
+    'passwordStrength.needUppercase': 'Паролата трябва да съдържа поне една главна буква',
+    'passwordStrength.needLowercase': 'Паролата трябва да съдържа поне една малка буква',
+    'passwordStrength.needNumber': 'Паролата трябва да съдържа поне едно число',
+    'passwordStrength.strong': 'Силна парола',
   }
 };
 
